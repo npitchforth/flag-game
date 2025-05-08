@@ -193,7 +193,7 @@
  
       if (!gameStarted) return (
         <div className="container">
-          <header><h1>Flag Guess Game</h1></header>
+          <header><h1>Guessy Flaggy</h1></header>
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <h2>Select Difficulty</h2>
             <div className="difficulty-selector">
@@ -232,7 +232,7 @@
  
       return (
         <div className="container">
-          <header><h1>Flag Guess Game</h1></header>
+          <header><h1>Guessy Flaggy</h1></header>
           <div className="game-info">
             <div className="game-stats">
               <div className="stat"><span className="stat-value">{score}</span><span className="stat-label">Score</span></div>
@@ -294,5 +294,7 @@
  
     ReactDOM.render(<App />, document.getElementById('root'));
   </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script> 		<!-- Howler.js is a sound library -->
+    <script src="sound-logic.js"></script> 								<!-- This is where the logic for sound effects is defined -->
 </body>
 </html>
