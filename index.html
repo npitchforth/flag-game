@@ -169,24 +169,26 @@
         setUsedCountries(prev => [...prev, newQuestion.code]);
       };
  
-      const handleFlagClick = c => {
-        if (disableClicks || gameOver) return;
-        const isCorrect = c.code === questionCountry.code;
-        setDisableClicks(true); setClickedFlag(c.code); setTotalAnswers(t => t + 1);
-        if (isCorrect) {
-          const streakBonus = Math.floor(currentStreak / 3);
-          setScore(s => s + 1 + streakBonus);
-          setCorrectAnswers(ca => ca + 1);
-          setCurrentStreak(cs => cs + 1);
-          setStreak(s => Math.max(s, currentStreak + 1));
-          setFeedback(`✅ Correct!${streakBonus ? ` +${streakBonus} streak` : ''}`);
-          setTimeout(() => generateQuestion(), 1000);
-        } else {
-          setCurrentStreak(0);
-          setFeedback(`❌ That's ${c.name}.`);
-          setTimeout(() => generateQuestion(), 1500);
-        }
-      };
+    const handleFlagClick = c => {
+  if (disableClicks || gameOver) return;
+  const isCorrect = c.code === questionCountry.code;
+  setDisableClicks(true);
+  setClickedFlag(c.code);
+  setTotalAnswers(t => t + 1);
+  if (isCorrect) {
+    setScore(s => s + 1);
+    setCorrectAnswers(ca => ca + 1);
+    setCurrentStreak(cs => cs + 1);
+    setStreak(s => Math.max(s, currentStreak + 1));
+    setFeedback(`✅ Correct!`);
+    setTimeout(() => generateQuestion(), 1000);
+  } else {
+    setCurrentStreak(0);
+    setFeedback(`❌ That's ${c.name}.`);
+    setTimeout(() => generateQuestion(), 1500);
+  }
+};
+
  
       const getTimerClass = () => timeLeft <= 10 ? 'danger' : timeLeft <= 20 ? 'warning' : '';
       const getAccuracy = () => totalAnswers ? Math.round((correctAnswers / totalAnswers) * 100) : 0;
@@ -236,7 +238,7 @@
           <div className="game-info">
             <div className="game-stats">
               <div className="stat"><span className="stat-value">{score}</span><span className="stat-label">Score</span></div>
-              <div className="stat"><span className="stat-value" id="timer" className={getTimerClass()}>{timeLeft}</span><span className="stat-label">Sec</span></div>
+              <div className="stat"><span className={`stat-value ${getTimerClass()}`} id="timer">{timeLeft}</span><span className="stat-label">Sec</span></div>
               <div className="stat"><span className="stat-value">{currentStreak}</span><span className="stat-label">Streak</span></div>
             </div>
           </div>
@@ -294,7 +296,6 @@
  
     ReactDOM.render(<App />, document.getElementById('root'));
   </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script> 		<!-- Howler.js is a sound library -->
-    <script src="sound-logic.js"></script> 								<!-- This is where the logic for sound effects is defined -->
+   
 </body>
 </html>
