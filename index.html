@@ -20,7 +20,11 @@
     .progress-container { width: 100%; background: #e5e7eb; border-radius: 4px; margin: 1.5rem 0 2rem 0; height: 8px; overflow: hidden; }
     .progress-bar { height: 100%; background: #2563eb; border-radius: 4px; transition: width 0.3s; }
     .question { font-size: 1.3rem; font-weight: 500; text-align: center; margin-bottom: 2rem; }
-    .flag-options { display: flex; flex-direction: row; justify-content: center; gap: 2rem; margin-bottom: 2.5rem; flex-wrap: wrap; }
+    .flag-options {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
     .flag-option { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.15s; position: relative; background: #fff; border-radius: 10px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); padding: 0.7rem 0.7rem 0.3rem 0.7rem; border: 1.5px solid transparent; }
     .flag-option:hover { transform: translateY(-4px) scale(1.04); box-shadow: 0 4px 16px rgba(37,99,235,0.08); }
     .flag-img { width: 90px; height: 60px; object-fit: cover; border-radius: 6px; border: 2.5px solid transparent; background: #eee; transition: border-color 0.2s, box-shadow 0.2s; }
@@ -231,8 +235,7 @@
       </div>
     </div>
   </div>
-);
- 
+); 
       if (gameOver) return (
         <div className="container">
           <header><h1>Game Over</h1></header>
@@ -260,7 +263,7 @@
                         <img
                           src={`https://flagcdn.com/w320/${country.code}.png`}
                           alt={country.name}
-                          style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: '6px' }}
+                          style={{ width: '120px', height: '80px', objectFit: 'contain', borderRadius: '6px' }}
                         />
                         <span style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>{country.name}</span>
                       </div>
@@ -280,7 +283,7 @@
                         <img
                           src={`https://flagcdn.com/w320/${country.code}.png`}
                           alt={country.name}
-                          style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: '6px' }}
+                          style={{ width: '120px', height: '80px', objectFit: 'contain', borderRadius: '6px' }}
                         />
                         <span style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>{country.name}</span>
                       </div>
@@ -312,17 +315,43 @@
           {questionCountry && (
             <>
               <div className="question">Which is the flag of <span style={{color: '#2563eb'}}>{questionCountry.name}</span>?</div>
-              <div className="flag-options">
-                {flagOptions.map(country => (
-                  <div key={country.code} className="flag-option" onClick={() => handleFlagClick(country)}>
+              <div className="flag-options" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <div className="flag-option" onClick={() => handleFlagClick(flagOptions[0])}>
                     <img
-                      className={`flag-img ${clickedFlag === country.code && country.code === questionCountry.code ? 'correct' : 
-                                   clickedFlag === country.code && country.code !== questionCountry.code ? 'incorrect' : ''}`}
-                      src={`https://flagcdn.com/w320/${country.code}.png`}
-                      alt={country.name}
+                      className="flag-img"
+                      src={`https://flagcdn.com/w320/${flagOptions[0].code}.png`}
+                      alt={flagOptions[0].name}
+                      style={{ width: '120px', height: '80px', objectFit: 'contain', borderRadius: '6px', border: clickedFlag === flagOptions[0].code && questionCountry.code === flagOptions[0].code ? '2.5px solid #22c55e' : clickedFlag === flagOptions[0].code ? '2.5px solid #ef4444' : '2.5px solid transparent' }}
                     />
                   </div>
-                ))}
+                  <div className="flag-option" onClick={() => handleFlagClick(flagOptions[1])}>
+                    <img
+                      className="flag-img"
+                      src={`https://flagcdn.com/w320/${flagOptions[1].code}.png`}
+                      alt={flagOptions[1].name}
+                      style={{ width: '120px', height: '80px', objectFit: 'contain', borderRadius: '6px', border: clickedFlag === flagOptions[1].code && questionCountry.code === flagOptions[1].code ? '2.5px solid #22c55e' : clickedFlag === flagOptions[1].code ? '2.5px solid #ef4444' : '2.5px solid transparent' }}
+                    />
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <div className="flag-option" onClick={() => handleFlagClick(flagOptions[2])}>
+                    <img
+                      className="flag-img"
+                      src={`https://flagcdn.com/w320/${flagOptions[2].code}.png`}
+                      alt={flagOptions[2].name}
+                      style={{ width: '120px', height: '80px', objectFit: 'contain', borderRadius: '6px', border: clickedFlag === flagOptions[2].code && questionCountry.code === flagOptions[2].code ? '2.5px solid #22c55e' : clickedFlag === flagOptions[2].code ? '2.5px solid #ef4444' : '2.5px solid transparent' }}
+                    />
+                  </div>
+                  <div className="flag-option" onClick={() => handleFlagClick(flagOptions[3])}>
+                    <img
+                      className="flag-img"
+                      src={`https://flagcdn.com/w320/${flagOptions[3].code}.png`}
+                      alt={flagOptions[3].name}
+                      style={{ width: '120px', height: '80px', objectFit: 'contain', borderRadius: '6px', border: clickedFlag === flagOptions[3].code && questionCountry.code === flagOptions[3].code ? '2.5px solid #22c55e' : clickedFlag === flagOptions[3].code ? '2.5px solid #ef4444' : '2.5px solid transparent' }}
+                    />
+                  </div>
+                </div>
               </div>
               <div className="feedback">{feedback}</div>
             </>
