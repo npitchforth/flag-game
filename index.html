@@ -58,13 +58,18 @@
 </head>
 <body>
   <div id="root"></div>
-  <script src="countries.js"></script>
   <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="countries.js"></script>
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
-    const countries = window.countries;
+    const countries = window.countries || [];
+ 
+    // Add check for countries data
+    if (!countries || countries.length === 0) {
+        console.error('Countries data not loaded. Please check if countries.js is properly loaded.');
+    }
  
     // Easy and Medium country codes (from your earlier list)
     const easyCountryCodes = [
@@ -113,6 +118,8 @@
       const [highScores, setHighScores] = useLocalStorage('flagGameHighScores', []);
       const [showHighScores, setShowHighScores] = useState(false);
       const [gameStarted, setGameStarted] = useState(false);
+      const [correctGuesses, setCorrectGuesses] = useState([]);
+      const [incorrectGuesses, setIncorrectGuesses] = useState([]);
  
       const timerRef = useRef(null);
       const progressBarRef = useRef(null);
@@ -139,9 +146,21 @@
       }, [difficulty]);
  
       const startNewGame = () => {
-        setScore(0); setStreak(0); setCurrentStreak(0); setCorrectAnswers(0); setTotalAnswers(0);
-        setUsedCountries([]); setGameOver(false); setTimeLeft(difficultySettings[difficulty].time);
+        if (!countries || countries.length === 0) {
+            alert('Error: Countries data not loaded. Please refresh the page and try again.');
+            return;
+        }
+        setScore(0);
+        setStreak(0);
+        setCurrentStreak(0);
+        setCorrectAnswers(0);
+        setTotalAnswers(0);
+        setUsedCountries([]);
+        setGameOver(false);
+        setTimeLeft(difficultySettings[difficulty].time);
         setFeedback('');
+        setCorrectGuesses([]);
+        setIncorrectGuesses([]);
         clearInterval(timerRef.current);
         timerRef.current = setInterval(() => setTimeLeft(t => t - 1), 1000);
         generateQuestion([]);
@@ -169,49 +188,50 @@
         setUsedCountries(prev => [...prev, newQuestion.code]);
       };
  
-    const handleFlagClick = c => {
-  if (disableClicks || gameOver) return;
-  const isCorrect = c.code === questionCountry.code;
-  setDisableClicks(true);
-  setClickedFlag(c.code);
-  setTotalAnswers(t => t + 1);
-  if (isCorrect) {
-    setScore(s => s + 1);
-    setCorrectAnswers(ca => ca + 1);
-    setCurrentStreak(cs => cs + 1);
-    setStreak(s => Math.max(s, currentStreak + 1));
-    setFeedback(`✅ Correct!`);
-    setTimeout(() => generateQuestion(), 1000);
-  } else {
-    setCurrentStreak(0);
-    setFeedback(`❌ That's ${c.name}.`);
-    setTimeout(() => generateQuestion(), 1500);
-  }
-};
-
+      const handleFlagClick = c => {
+        if (disableClicks || gameOver) return;
+        const isCorrect = c.code === questionCountry.code;
+        setDisableClicks(true);
+        setClickedFlag(c.code);
+        setTotalAnswers(t => t + 1);
+        if (isCorrect) {
+          setScore(s => s + 1);
+          setCorrectAnswers(ca => ca + 1);
+          setCurrentStreak(cs => cs + 1);
+          setStreak(s => Math.max(s, currentStreak + 1));
+          setFeedback(`✅ Correct!`);
+          setCorrectGuesses(prev => [...prev, questionCountry]);
+          setTimeout(() => generateQuestion(), 1000);
+        } else {
+          setCurrentStreak(0);
+          setFeedback(`❌ That's ${c.name}.`);
+          setIncorrectGuesses(prev => [...prev, questionCountry]);
+          setTimeout(() => generateQuestion(), 1500);
+        }
+      };
  
       const getTimerClass = () => timeLeft <= 10 ? 'danger' : timeLeft <= 20 ? 'warning' : '';
       const getAccuracy = () => totalAnswers ? Math.round((correctAnswers / totalAnswers) * 100) : 0;
  
-      if (!gameStarted) return (
-        <div className="container">
-          <header><h1>Guessy Flaggy</h1></header>
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h2>Select Difficulty</h2>
-            <div className="difficulty-selector">
-              {['easy', 'medium', 'hard'].map(d => (
-                <button key={d} className={`difficulty-btn ${difficulty === d ? 'active' : ''}`} onClick={() => setDifficulty(d)}>
-                  {d[0].toUpperCase() + d.slice(1)}
-                </button>
-              ))}
-            </div>
-            <div className="button-container">
-              <button className="button success" onClick={startNewGame}>Start</button>
-              <button className="button" onClick={() => setShowHighScores(true)}>High Scores</button>
-            </div>
-          </div>
-        </div>
-      );
+  if (!gameStarted) return (
+  <div className="container">
+    <header><h1>Guessy Flaggy</h1></header>
+    <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+      <h2>Select Difficulty</h2>
+      <div className="difficulty-selector">
+        {['easy', 'medium', 'hard'].map(d => (
+          <button key={d} className={`difficulty-btn ${difficulty === d ? 'active' : ''}`} onClick={() => setDifficulty(d)}>
+            {d[0].toUpperCase() + d.slice(1)}
+          </button>
+        ))}
+      </div>
+      <div className="button-container">
+        <button className="button success" onClick={startNewGame}>Start</button>
+        <button className="button" onClick={() => setShowHighScores(true)}>High Scores</button>
+      </div>
+    </div>
+  </div>
+);
  
       if (gameOver) return (
         <div className="container">
@@ -224,10 +244,54 @@
               <div className="stat"><span className="stat-value">{getAccuracy()}%</span><span className="stat-label">Accuracy</span></div>
               <div className="stat"><span className="stat-value">{streak}</span><span className="stat-label">Streak</span></div>
             </div>
-            <div className="button-container">
+            
+             <div className="button-container">
               <button className="button success" onClick={() => setGameStarted(false)}>Play Again</button>
               <button className="button" onClick={() => setShowHighScores(true)}>High Scores</button>
             </div>
+
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginTop: '2rem' }}>
+              <div style={{ textAlign: 'center' }}>
+                <h3 style={{ marginBottom: '1rem' }}>Correct</h3>
+                {correctGuesses.length > 0 ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    {correctGuesses.map((country, index) => (
+                      <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <img
+                          src={`https://flagcdn.com/w320/${country.code}.png`}
+                          alt={country.name}
+                          style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: '6px' }}
+                        />
+                        <span style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>{country.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ color: '#6b7280' }}>None</div>
+                )}
+              </div>
+              
+              <div style={{ textAlign: 'center' }}>
+                <h3 style={{ marginBottom: '1rem' }}>Incorrect</h3>
+                {incorrectGuesses.length > 0 ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    {incorrectGuesses.map((country, index) => (
+                      <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <img
+                          src={`https://flagcdn.com/w320/${country.code}.png`}
+                          alt={country.name}
+                          style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: '6px' }}
+                        />
+                        <span style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>{country.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ color: '#6b7280' }}>None</div>
+                )}
+              </div>
+            </div>
+
           </div>
         </div>
       );
@@ -251,13 +315,13 @@
               <div className="flag-options">
                 {flagOptions.map(country => (
                   <div key={country.code} className="flag-option" onClick={() => handleFlagClick(country)}>
-  <img
-    className={`flag-img ${clickedFlag === country.code && country.code === questionCountry.code ? 'correct' : 
-                         clickedFlag === country.code && country.code !== questionCountry.code ? 'incorrect' : ''}`}
-    src={`https://flagcdn.com/w320/${country.code}.png`}
-    alt={country.name}
-  />
-</div>
+                    <img
+                      className={`flag-img ${clickedFlag === country.code && country.code === questionCountry.code ? 'correct' : 
+                                   clickedFlag === country.code && country.code !== questionCountry.code ? 'incorrect' : ''}`}
+                      src={`https://flagcdn.com/w320/${country.code}.png`}
+                      alt={country.name}
+                    />
+                  </div>
                 ))}
               </div>
               <div className="feedback">{feedback}</div>
