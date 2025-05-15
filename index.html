@@ -4,61 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Flag Guess Game</title>
-  <style>
-    /* (Paste your modern, clean CSS here) */
-    body { font-family: 'Inter', Arial, sans-serif; background: #f9fafb; color: #222; margin: 0; }
-    .container { max-width: 600px; margin: 0 auto; padding: 32px 16px; }
-    header { text-align: center; margin-bottom: 2rem; }
-    h1 { font-size: 2.2rem; font-weight: 700; margin: 0 0 0.5rem 0; }
-    .game-info { display: flex; justify-content: center; align-items: center; margin-bottom: 2rem; gap: 2rem; }
-    .game-stats { display: flex; gap: 2rem; justify-content: center; align-items: center; width: 100%; }
-    .stat { display: flex; flex-direction: column; align-items: center; background: #fff; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); padding: 0.7rem 1.2rem; min-width: 80px; border: 1px solid #e5e7eb; }
-    .stat-value { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.2rem; }
-    .stat-label { font-size: 0.85rem; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; }
-    #timer.danger { color: #ef4444; }
-    #timer.warning { color: #f59e42; }
-    .progress-container { width: 100%; background: #e5e7eb; border-radius: 4px; margin: 1.5rem 0 2rem 0; height: 8px; overflow: hidden; }
-    .progress-bar { height: 100%; background: #2563eb; border-radius: 4px; transition: width 0.3s; }
-    .question { font-size: 1.3rem; font-weight: 500; text-align: center; margin-bottom: 2rem; }
-    .flag-options {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    .flag-option { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.15s; position: relative; background: #fff; border-radius: 10px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); padding: 0.7rem 0.7rem 0.3rem 0.7rem; border: 1.5px solid transparent; }
-    .flag-option:hover { transform: translateY(-4px) scale(1.04); box-shadow: 0 4px 16px rgba(37,99,235,0.08); }
-    .flag-img { width: 90px; height: 60px; object-fit: cover; border-radius: 6px; border: 2.5px solid transparent; background: #eee; transition: border-color 0.2s, box-shadow 0.2s; }
-    .flag-img.correct { border-color: #22c55e; box-shadow: 0 0 0 4px #22c55e33; animation: pulse-success 0.7s; }
-    .flag-img.incorrect { border-color: #ef4444; animation: shake 0.5s; }
-    @keyframes pulse-success { 0% { box-shadow: 0 0 0 0 #22c55e55; } 70% { box-shadow: 0 0 0 10px #22c55e00; } 100% { box-shadow: 0 0 0 0 #22c55e00; } }
-    @keyframes shake { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); } 20%, 40%, 60%, 80% { transform: translateX(4px); } }
-    .flag-name { margin-top: 0.5rem; font-size: 1rem; text-align: center; color: #6b7280; font-weight: 500; letter-spacing: 0.5px; }
-    .feedback { margin: 1.5rem 0 0.5rem 0; text-align: center; font-size: 1.2rem; font-weight: 600; min-height: 2rem; color: #1e40af; }
-    .button { background: #2563eb; color: #fff; border: none; padding: 0.8rem 1.5rem; font-size: 1rem; border-radius: 6px; cursor: pointer; transition: background 0.18s; font-weight: 600; box-shadow: 0 1px 4px rgba(0,0,0,0.04); margin: 0 0.5rem; }
-    .button:hover { background: #1e40af; }
-    .button.success { background: #22c55e; }
-    .button.success:hover { background: #16a34a; }
-    .button-container { display: flex; justify-content: center; gap: 1rem; margin-top: 2rem; }
-    .difficulty-selector { display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; }
-    .difficulty-btn { padding: 0.5rem 1.2rem; background: #f3f4f6; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 1rem; color: #222; transition: background 0.15s, color 0.15s; }
-    .difficulty-btn.active { background: #2563eb; color: #fff; }
-    .game-over { text-align: center; margin: 2rem 0; }
-    .final-score { font-size: 3rem; font-weight: bold; margin: 1rem 0; color: #2563eb; }
-    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.18); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s; }
-    .modal.active { opacity: 1; visibility: visible; }
-    .modal-content { background: #fff; padding: 2rem; border-radius: 10px; max-width: 420px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 24px rgba(0,0,0,0.13); transform: translateY(-20px); transition: transform 0.3s; }
-    .modal.active .modal-content { transform: translateY(0); }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-    .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666; }
-    .high-scores { list-style: none; padding: 0; }
-    .high-score-item { display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid #eee; }
-    .high-score-position { font-weight: bold; color: #2563eb; margin-right: 1rem; }
-    .high-score-info { flex-grow: 1; }
-    .high-score-difficulty { color: #666; font-size: 0.9rem; }
-    .high-score-score { font-weight: bold; }
-    @media (max-width: 700px) { .container { padding: 16px 2vw; } .flag-options { gap: 1rem; } .stat { min-width: 60px; padding: 0.5rem 0.7rem; } .flag-img { width: 60px; height: 40px; } }
-    @media (max-width: 500px) { .game-stats { gap: 0.7rem; } .flag-options { gap: 0.5rem; } }
-  </style>
+  <link rel="stylesheet" href="styles.css"> <!-- Link to the new CSS file -->
 </head>
 <body>
   <div id="root"></div>
@@ -67,6 +13,35 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="countries.js"></script>
   <script type="text/babel">
+    const HighScoresModal = ({ isOpen, onClose, highScores }) => {
+      if (!isOpen) return null;
+      
+      return (
+        <div className="modal active" onClick={onClose}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>High Scores</h2>
+              <button className="modal-close" onClick={onClose}>&times;</button>
+            </div>
+            {highScores.length === 0 ? (
+              <div className="modal-empty">No high scores yet.</div>
+            ) : (
+              <ul className="high-scores">
+                {highScores.map((score, i) => (
+                  <li className="high-score-item" key={i}>
+                    <span className="high-score-position">{i + 1}.</span>
+                    <span className="high-score-info">
+                      <span className="high-score-score">{score.score}</span> pts &mdash; {score.difficulty} &mdash; {new Date(score.date).toLocaleDateString()} &mdash; {score.accuracy}%
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      );
+    };
+
     const { useState, useEffect, useRef } = React;
     const countries = window.countries || [];
  
@@ -129,9 +104,9 @@
       const progressBarRef = useRef(null);
  
       const difficultySettings = {
-        easy: { time: 45, optionCount: 4 },
-        medium: { time: 45, optionCount: 4 },
-        hard: { time: 45, optionCount: 4 }
+        easy: { time: 15, optionCount: 4 },
+        medium: { time: 15, optionCount: 4 },
+        hard: { time: 15, optionCount: 4 }
       };
  
       useEffect(() => () => clearInterval(timerRef.current), []);
@@ -203,12 +178,12 @@
           setCorrectAnswers(ca => ca + 1);
           setCurrentStreak(cs => cs + 1);
           setStreak(s => Math.max(s, currentStreak + 1));
-          setFeedback(`✅ Correct!`);
+          setFeedback(`Correct!`);
           setCorrectGuesses(prev => [...prev, questionCountry]);
           setTimeout(() => generateQuestion(), 1000);
         } else {
           setCurrentStreak(0);
-          setFeedback(`❌ That's ${c.name}.`);
+          setFeedback(`That's ${c.name}.`);
           setIncorrectGuesses(prev => [...prev, questionCountry]);
           setTimeout(() => generateQuestion(), 1500);
         }
@@ -217,88 +192,103 @@
       const getTimerClass = () => timeLeft <= 10 ? 'danger' : timeLeft <= 20 ? 'warning' : '';
       const getAccuracy = () => totalAnswers ? Math.round((correctAnswers / totalAnswers) * 100) : 0;
  
-  if (!gameStarted) return (
-  <div className="container">
-    <header><h1>Guessy Flaggy</h1></header>
-    <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-      <h2>Select Difficulty</h2>
-      <div className="difficulty-selector">
-        {['easy', 'medium', 'hard'].map(d => (
-          <button key={d} className={`difficulty-btn ${difficulty === d ? 'active' : ''}`} onClick={() => setDifficulty(d)}>
-            {d[0].toUpperCase() + d.slice(1)}
-          </button>
-        ))}
-      </div>
-      <div className="button-container">
-        <button className="button success" onClick={startNewGame}>Start</button>
-        <button className="button" onClick={() => setShowHighScores(true)}>High Scores</button>
-      </div>
-    </div>
-  </div>
-); 
-      if (gameOver) return (
-        <div className="container">
-          <header><h1>Game Over</h1></header>
-          <div className="game-over">
-            <div className="final-score">{score}</div>
-            <div className="game-stats">
-              <div className="stat"><span className="stat-value">{correctAnswers}</span><span className="stat-label">Correct</span></div>
-              <div className="stat"><span className="stat-value">{totalAnswers - correctAnswers}</span><span className="stat-label">Wrong</span></div>
-              <div className="stat"><span className="stat-value">{getAccuracy()}%</span><span className="stat-label">Accuracy</span></div>
-              <div className="stat"><span className="stat-value">{streak}</span><span className="stat-label">Streak</span></div>
-            </div>
-            
-             <div className="button-container">
-              <button className="button success" onClick={() => setGameStarted(false)}>Play Again</button>
-              <button className="button" onClick={() => setShowHighScores(true)}>High Scores</button>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginTop: '2rem' }}>
-              <div style={{ textAlign: 'center' }}>
-                <h3 style={{ marginBottom: '1rem' }}>Correct</h3>
-                {correctGuesses.length > 0 ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    {correctGuesses.map((country, index) => (
-                      <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <img
-                          src={`https://flagcdn.com/w320/${country.code}.png`}
-                          alt={country.name}
-                          style={{ width: '120px', height: '80px', objectFit: 'contain', borderRadius: '6px' }}
-                        />
-                        <span style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>{country.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div style={{ color: '#6b7280' }}>None</div>
-                )}
+      if (!gameStarted) return (
+        <>
+          <div className="container">
+            <header><h1>Guessy Flaggy</h1></header>
+            <div className="centered-text">
+              <h2>Select Difficulty</h2>
+              <div className="difficulty-selector">
+                {['easy', 'medium', 'hard'].map(d => (
+                  <button key={d} className={`difficulty-btn ${difficulty === d ? 'active' : ''}`} onClick={() => setDifficulty(d)}>
+                    {d[0].toUpperCase() + d.slice(1)}
+                  </button>
+                ))}
               </div>
-              
-              <div style={{ textAlign: 'center' }}>
-                <h3 style={{ marginBottom: '1rem' }}>Incorrect</h3>
-                {incorrectGuesses.length > 0 ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    {incorrectGuesses.map((country, index) => (
-                      <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <img
-                          src={`https://flagcdn.com/w320/${country.code}.png`}
-                          alt={country.name}
-                          style={{ width: '120px', height: '80px', objectFit: 'contain', borderRadius: '6px' }}
-                        />
-                        <span style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>{country.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div style={{ color: '#6b7280' }}>None</div>
-                )}
+              <div className="button-container">
+                <button className="button success" onClick={startNewGame}>Start</button>
+                <button className="button" onClick={() => setShowHighScores(true)}>High Scores</button>
               </div>
             </div>
-
           </div>
-        </div>
+          <HighScoresModal 
+            isOpen={showHighScores}
+            onClose={() => setShowHighScores(false)}
+            highScores={highScores}
+          />
+        </>
       );
  
+      if (gameOver) return (
+        <>
+          <div className="container">
+            <header><h1>Game Over</h1></header>
+            <div className="game-over">
+              <div className="game-stats">
+                <div className="stat"><span className="stat-value">{correctAnswers}</span><span className="stat-label">Correct</span></div>
+                <div className="stat"><span className="stat-value">{totalAnswers - correctAnswers}</span><span className="stat-label">Wrong</span></div>
+                <div className="stat"><span className="stat-value">{getAccuracy()}%</span><span className="stat-label">Accuracy</span></div>
+                <div className="stat"><span className="stat-value">{streak}</span><span className="stat-label">Streak</span></div>
+              </div>
+              
+              <div className="button-container">
+                <button className="button success" onClick={() => setGameStarted(false)}>Play Again</button>
+                <button className="button" onClick={() => {
+                  console.log("High Scores button clicked");
+                  setShowHighScores(true);
+                  console.log("showHighScores state set to true");
+                }}>High Scores</button>
+              </div>
+
+              <div className="game-over-flags-container">
+                <div className="flag-column">
+                  <h3>Correct</h3>
+                  {correctGuesses.length > 0 ? (
+                    <div className="flag-list">
+                      {correctGuesses.map((country, index) => (
+                        <div key={index} className="flag-item">
+                          <img
+                            src={`https://flagcdn.com/w320/${country.code}.png`}
+                            alt={country.name}
+                          />
+                          <span>{country.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="empty-message">None</div>
+                  )}
+                </div>
+                
+                <div className="flag-column">
+                  <h3>Incorrect</h3>
+                  {incorrectGuesses.length > 0 ? (
+                    <div className="flag-list">
+                      {incorrectGuesses.map((country, index) => (
+                        <div key={index} className="flag-item">
+                          <img
+                            src={`https://flagcdn.com/w320/${country.code}.png`}
+                            alt={country.name}
+                          />
+                          <span>{country.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="empty-message">None</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+          <HighScoresModal 
+            isOpen={showHighScores}
+            onClose={() => setShowHighScores(false)}
+            highScores={highScores}
+          />
+        </>
+      );
+      
       return (
         <div className="container">
           <header><h1>Guessy Flaggy</h1></header>
@@ -360,7 +350,7 @@
             <div className="modal-content">
               <div className="modal-header">
                 <h2>High Scores</h2>
-                <button className="modal-close" onClick={() => setShowHighScores(false)}>×</button>
+                <button className="modal-close" onClick={() => setShowHighScores(false)}>Close</button>
               </div>
               {highScores.length > 0 ? (
                 <ul className="high-scores">
@@ -389,6 +379,5 @@
  
     ReactDOM.render(<App />, document.getElementById('root'));
   </script>
-   
 </body>
 </html>
