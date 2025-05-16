@@ -13,9 +13,24 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="countries.js"></script>
   <script type="text/babel">
-    const HighScoresModal = ({ isOpen, onClose, highScores }) => {
+ const HighScoresModal = ({ isOpen, onClose, highScores }) => {
       if (!isOpen) return null;
-      
+
+      const difficulties = ['easy', 'medium', 'hard'];
+      const difficultyEmojis = {
+        easy: '🟦',
+        medium: '🟩',
+        hard: '🟥',
+      };
+
+      const scoresByDifficulty = difficulties.map(difficultyLevel => ({
+        level: difficultyLevel,
+        displayName: difficultyLevel.charAt(0).toUpperCase() + difficultyLevel.slice(1),
+        emoji: difficultyEmojis[difficultyLevel],
+        scores: highScores
+          .filter(score => score.difficulty === difficultyLevel)
+      }));
+
       return (
         <div className="modal active" onClick={onClose}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
@@ -23,20 +38,39 @@
               <h2>High Scores</h2>
               <button className="modal-close" onClick={onClose}>&times;</button>
             </div>
+
             {highScores.length === 0 ? (
-              <div className="modal-empty">No high scores yet.</div>
+              <div className="modal-empty">No high scores yet. Play a game to see your scores!</div>
             ) : (
-              <ul className="high-scores">
-                {highScores.map((score, i) => (
-                  <li className="high-score-item" key={i}>
-                    <span className="high-score-position">{i + 1}.</span>
-                    <span className="high-score-info">
-                      <span className="high-score-score">{score.score}</span> pts &mdash; {score.difficulty} &mdash; {new Date(score.date).toLocaleDateString()} &mdash; {score.accuracy}%
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              scoresByDifficulty.map(group => (
+                group.scores.length > 0 && (
+                  <div key={group.level} className="high-scores-difficulty-group">
+                    <h3 className={`difficulty-group-header difficulty-header-${group.level}`}>
+                      {group.emoji} {group.displayName}
+                    </h3>
+                    <div className="high-scores-header">
+                      <span className="header-rank">Rank</span>
+                      <span className="header-score">Score</span>
+                      <span className="header-accuracy">Accuracy</span>
+                      <span className="header-date">Date</span>
+                    </div>
+                    <ul className="high-scores-list">
+                      {group.scores.map((score, index) => (
+                        <li className="high-score-entry" key={index}>
+                          <span className="entry-position">{index + 1}.</span>
+                          <span className="entry-points">{score.score}</span>
+                          <span className="entry-accuracy">{score.accuracy}%</span>
+                          <span className="entry-date">{new Date(score.date).toLocaleDateString()}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )
+              ))
             )}
+            <div className="modal-footer">
+                <button className="button" onClick={onClose}>Close</button>
+            </div>
           </div>
         </div>
       );
@@ -50,18 +84,10 @@
         console.error('Countries data not loaded. Please check if countries.js is properly loaded.');
     }
  
-    // Easy and Medium country codes (from your earlier list)
-    const easyCountryCodes = [
-      'af','ar','au','be','br','ca','cn','dk','fj','fi','fr','de','gr','hk','is','in','id','ie','il','it','jp','my','yt','mx','ma','nl','nz','ng','no','pk','pg','pl','ru','sa','sg','za','kr','es','lk','se','ch','th','tr','ua','gb','us','vn'
-    ];
-    const mediumCountryCodes = [
-      'al','dz','at','bd','bb','ba','bw','bg','cl','co','cm','ck','cr','hr','cu','cy','cz','ec','eg','hu','ir','iq','jm','jo','ke','ly','md','np','kp','ps','pe','ph','pt','ro','ws','sn','rs','sd','sy','tw','tz','to','tn','ug','va','ve','zw'
-    ];
- 
     const getCountriesByDifficulty = d =>
-      d === 'easy' ? countries.filter(c => easyCountryCodes.includes(c.code)) :
-      d === 'medium' ? countries.filter(c => mediumCountryCodes.includes(c.code)) :
-      countries.filter(c => !easyCountryCodes.includes(c.code) && !mediumCountryCodes.includes(c.code));
+      d === 'easy' ? countries.filter(c => c.difficulty === 'easy') :
+      d === 'medium' ? countries.filter(c => c.difficulty === 'medium') :
+      countries.filter(c => !c.difficulty || c.difficulty === 'hard');
  
     const getRandomElements = (arr, count, exclude = []) =>
       arr.filter(c => !exclude.includes(c.code)).sort(() => 0.5 - Math.random()).slice(0, count);
@@ -104,9 +130,9 @@
       const progressBarRef = useRef(null);
  
       const difficultySettings = {
-        easy: { time: 15, optionCount: 4 },
-        medium: { time: 15, optionCount: 4 },
-        hard: { time: 15, optionCount: 4 }
+        easy: { time: 45, optionCount: 4 },
+        medium: { time: 45, optionCount: 4 },
+        hard: { time: 45, optionCount: 4 }
       };
  
       useEffect(() => () => clearInterval(timerRef.current), []);
