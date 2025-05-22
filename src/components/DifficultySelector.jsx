@@ -24,6 +24,8 @@ const DifficultySelector = ({
         <label className="toggle-switch">
           <input
             type="checkbox"
+            id="sovereign-only"
+            name="sovereign-only"
             checked={sovereignOnly}
             onChange={() => onSovereignOnlyChange(prev => !prev)}
           />
