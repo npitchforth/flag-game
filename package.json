@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Flag guessing game",
   "scripts": {
-    "build": "rm -rf dist && mkdir dist && webpack --mode production && cp -r public/* dist/ && chmod -R 755 dist/ && ls -la dist/",
+    "build": "webpack --mode production",
     "dev": "webpack serve --mode development",
     "vercel-build": "npm run build",
     "start": "serve dist"
