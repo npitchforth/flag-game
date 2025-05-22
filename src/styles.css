@@ -1,0 +1,554 @@
+/* styles.css */
+
+/* Body and Container Styles */
+body { 
+    font-family: 'Inter', Arial, sans-serif; 
+    background: #f9fafb; 
+    color: #222; 
+    margin: 0; 
+}
+.container { 
+    max-width: 600px; 
+    margin: 0 auto; 
+    padding: 32px 16px; 
+}
+
+.button-container { 
+    display: flex; /* Use flexbox layout */
+    justify-content: center; /* Center the buttons horizontally */
+    gap: 1rem; /* Space between buttons */
+    margin-top: 1.5rem; /* Space above the button container */
+}
+
+/* Header Styles */
+header { 
+    text-align: center; 
+    margin-bottom: 2rem; 
+}
+h1 { 
+    font-size: 2.2rem; 
+    font-weight: 700; 
+    margin: 0 0 0.5rem 0; 
+}
+
+/* Game Info and Stats Styles */
+.game-info { 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    margin-bottom: 2rem; 
+    gap: 2rem; 
+}
+.game-stats { 
+    display: flex; 
+    gap: 2rem; 
+    justify-content: center; 
+    align-items: center; 
+    width: 100%; 
+}
+.stat { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    background: #fff; 
+    border-radius: 10px; 
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04); 
+    padding: 0.7rem 1.2rem; 
+    min-width: 80px; 
+    border: 1px solid #e5e7eb; 
+}
+.stat-value { 
+    font-size: 1.5rem; 
+    font-weight: 600; 
+    margin-bottom: 0.2rem; 
+}
+.stat-label { 
+    font-size: 0.85rem; 
+    color: #6b7280; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+}
+
+/* Timer Styles */
+#timer.danger { color: #ef4444; }
+#timer.warning { color: #f59e42; }
+
+/* Progress Bar Styles */
+.progress-container { 
+    width: 100%; 
+    background: #e5e7eb; 
+    border-radius: 4px; 
+    margin: 1.5rem 0 2rem 0; 
+    height: 8px; 
+    overflow: hidden; 
+}
+.progress-bar { 
+    height: 100%; 
+    background: #2563eb; 
+    border-radius: 4px; 
+    transition: width 0.3s; 
+}
+
+/* Question Styles */
+.question { 
+    font-size: 1.3rem; 
+    font-weight: 500; 
+    text-align: center; 
+    margin-bottom: 2rem; 
+}
+
+/* Flag Options Styles */
+.flag-options { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 1rem; 
+}
+.flag-option { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    cursor: pointer; 
+    transition: transform 0.15s; 
+    position: relative; 
+    background: #fff; 
+    border-radius: 10px; 
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06); 
+    padding: 0.7rem 0.7rem 0.3rem 0.7rem; 
+    border: 1.5px solid transparent; 
+}
+.flag-option:hover { 
+    transform: translateY(-4px) scale(1.04); 
+    box-shadow: 0 4px 16px rgba(37,99,235,0.08); 
+}
+.flag-img { 
+    width: 90px; 
+    height: 60px; 
+    object-fit: cover; 
+    border-radius: 6px; 
+    border: 2.5px solid transparent; 
+    background: #eee; 
+    transition: border-color 0.2s, box-shadow 0.2s; 
+}
+.flag-img.correct { 
+    border-color: #22c55e; 
+    box-shadow: 0 0 0 4px #22c55e33; 
+    animation: pulse-success 0.7s; 
+}
+.flag-img.incorrect { 
+    border-color: #ef4444; 
+    animation: shake 0.5s; 
+}
+
+/* Feedback Styles */
+.feedback { 
+    margin: 1.5rem 0 0.5rem 0; 
+    text-align: center; 
+    font-size: 1.2rem; 
+    font-weight: 600; 
+    min-height: 2rem; 
+    color: #1e40af; 
+}
+
+/* Button Styles */
+.button { 
+    background: #2563eb; 
+    color: #fff; 
+    border: none; 
+    padding: 0.8rem 1.5rem; 
+    font-size: 1rem; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    transition: background 0.18s; 
+    font-weight: 600; 
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04); 
+	margin-bottom: 0.5rem; /* Margins for the button */
+	margin-top: 1.5rem;
+	margin-right: 0.5rem;
+	margin-left: 0.5rem;
+}
+.button:hover { 
+    background: #1e40af; 
+}
+.button.success { 
+    background: #22c55e; 
+}
+.button.success:hover { 
+    background: #16a34a; 
+}
+
+/* Difficulty Buttons Styles */
+.difficulty-btn {
+    padding: 0.5rem 1.2rem; /* Padding for the button */
+	margin-bottom: 1.5rem; /* Margins for the button */
+	margin-right: 0.5rem;
+	margin-left: 0.5rem;
+    background: #f3f4f6; /* Background color */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-weight: 500; /* Font weight */
+    font-size: 1rem; /* Font size */
+    color: #222; /* Text color */
+    transition: background 0.15s, color 0.15s; /* Transition effects */
+}
+
+.difficulty-btn.active {
+    background: #2563eb; /* Active background color */
+    color: #fff; /* Active text color */
+}
+/* Modal Overlay */
+.modal { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100vw; 
+    height: 100vh; 
+    background: rgba(30, 41, 59, 0.32); /* deeper, modern overlay */
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    z-index: 1000; 
+    opacity: 0; 
+    visibility: hidden; 
+    transition: opacity 0.3s, visibility 0.3s; 
+}
+.modal.active { 
+    opacity: 1; 
+    visibility: visible; 
+}
+
+/* Modal Content */
+.modal-content {
+    padding: 2.5rem 2rem 2rem 2rem;
+    background: #f9fafb; /* subtle off-white for card look */
+    border-radius: 18px;
+    max-width: 420px;
+    width: 95vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(30, 41, 59, 0.18), 0 1.5px 6px rgba(0,0,0,0.10);
+    border: 1px solid #e5e7eb;
+    animation: modal-fade-in 0.4s cubic-bezier(.4,0,.2,1);
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+@keyframes modal-fade-in {
+    from { opacity: 0; transform: translateY(32px) scale(0.98);}
+    to { opacity: 1; transform: translateY(0) scale(1);}
+}
+
+/* Modal Header */
+.modal-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 1.2rem;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0.7rem;
+}
+.modal-header h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #1e293b;
+    margin: 0;
+}
+
+/* Close Button */
+.modal-close { 
+    background: none; 
+    border: none; 
+    font-size: 1.7rem; 
+    cursor: pointer; 
+    color: #64748b;
+    transition: color 0.18s;
+    border-radius: 50%;
+    width: 2.2rem;
+    height: 2.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-close:hover {
+    background: #e0e7ef;
+    color: #1e293b;
+}
+
+/* Styles for the new High Scores Modal UI */
+.high-scores-difficulty-group {
+  margin-bottom: 1.5rem; /* Space between difficulty groups */
+  padding-bottom: 1rem; /* Padding before the border */
+  border-bottom: 1px solid #e0e7ef; /* Separator line like in wireframe */
+}
+
+.high-scores-difficulty-group:last-of-type {
+  border-bottom: none; /* No border for the last group */
+  margin-bottom: 0;
+}
+
+.difficulty-group-header {
+  font-size: 1.25rem; /* Larger font for difficulty headers */
+  font-weight: 600;
+  color: #374151; /* Darker gray for header text */
+  margin-bottom: 0.75rem;
+}
+
+.high-scores-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0.25rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 2px solid #e5e7eb;
+  font-weight: 600;
+  color: #4b5563;
+  font-size: 0.9rem;
+}
+
+.header-rank {
+  min-width: 2em;
+  text-align: left;
+}
+
+.header-score {
+  min-width: 70px;
+  text-align: left;
+}
+
+.header-accuracy {
+  min-width: 50px;
+  text-align: center;
+}
+
+.header-date {
+  min-width: 90px;
+  text-align: right;
+}
+
+.high-scores-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.high-score-entry {
+  display: flex;
+  align-items: baseline; /* Aligns text nicely */
+  justify-content: space-between; /* Spreads out the elements */
+  padding: 0.6rem 0.25rem; /* Padding for each score entry */
+  font-size: 0.95rem; /* Base font size for entries */
+  color: #4b5563; /* Default text color for entries */
+}
+
+.high-score-entry:not(:last-child) {
+  border-bottom: 1px dashed #f3f4f6; /* Subtle separator for entries within a group */
+}
+
+.entry-position {
+  font-weight: 600;
+  min-width: 2em; /* Ensures space for "1.", "2.", etc. */
+  color: #1f2937;
+  text-align: left;
+} 
+
+.entry-points {
+  font-weight: 500;
+  min-width: 70px; /* Adjust as needed */
+  text-align: left;
+}
+
+.entry-accuracy {
+  font-weight: 500;
+  min-width: 50px; /* Adjust as needed */
+  text-align: center;
+}
+
+.entry-date {
+  color: #6b7280; /* Lighter color for date */
+  min-width: 90px; /* Adjust as needed */
+  text-align: right;
+}
+
+.modal-empty { /* Style for when there are no scores */
+  margin-top: 0.5rem; /* Space above the note */
+  font-size: 0.8rem; /* Font size for the note */
+  font-style: italic; /* Italic style for the note */
+  color: #555; /* Optional: Change the color to a lighter shade for better visibility */
+
+}
+
+.modal-footer {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e7ef;
+  display: flex;
+  justify-content: flex-end; /* Aligns button to the right */
+}
+
+/* IMPORTANT: You might need to remove or comment out old .high-scores, 
+   .high-score-item, .high-score-position, .high-score-info, .high-score-score, 
+   .high-score-difficulty classes if they conflict with these new styles. 
+   For example: */
+/*
+.high-scores { list-style: none; padding: 0; }
+.high-score-item { display: none; } // Comment out or remove if not used elsewhere
+.high-score-position { display: none; }
+.high-score-info { display: none; }
+.high-score-difficulty { display: none; }
+.high-score-score { display: none; }
+*/
+
+/* Media Queries */
+@media (max-width: 700px) { 
+    .container { 
+        padding: 16px 2vw; 
+    } 
+    .flag-options { 
+        gap: 1rem; 
+    } 
+    .stat { 
+        min-width: 60px; 
+        padding: 0.5rem 0.7rem; 
+    } 
+    .flag-img { 
+        width: 60px; 
+        height: 40px; 
+    } 
+}
+@media (max-width: 500px) { 
+    .game-stats { 
+        gap: 0.7rem; 
+    } 
+    .flag-options { 
+        gap: 0.5rem; 
+    } 
+}
+
+.modal-empty {
+  color: #666;
+  text-align: center;
+  padding: 1rem;
+}
+
+/* Game Over Flag Display Styles */
+.game-over-flags-container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.flag-column {
+  text-align: center;
+}
+
+.flag-column h3 {
+  margin-bottom: 1rem;
+}
+
+.flag-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.flag-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flag-item img {
+  width: 120px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.flag-item span {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.empty-message {
+  color: #6b7280;
+}
+
+.difficulty-selector {
+  display: flex; /* Use flexbox for layout */
+  justify-content: center; /* Center the buttons horizontally */
+  gap: 1rem; /* Space between buttons */
+  margin-bottom: 2rem; /* Optional: space below the selector */
+}
+
+/* Centered Text Style */
+.centered-text {
+  text-align: center; /* Center the text horizontally */
+  margin-bottom: 2rem; /* Space below the text */
+}
+
+/* Add sovereign-state filter toggle styles */
+.toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+.toggle-switch {
+  position: relative;
+  width: 40px;
+  height: 20px;
+  display: inline-block;
+}
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e5e7eb;
+  border-radius: 20px;
+  transition: background-color 0.3s;
+}
+.switch-slider::before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+.toggle-switch input:checked + .switch-slider {
+  background-color: #2563eb;
+}
+.toggle-switch input:checked + .switch-slider::before {
+  transform: translateX(20px);
+}
+.toggle-label {
+  font-size: 1rem;
+  color: #222;
+}
+
+/* New styles for high-score-note (the note to explain what the asterisk means)*/
+.high-score-note {
+    margin-top: 0.5rem; /* Space above the note */
+    font-size: 0.8rem; /* Font size for the note */
+    font-style: italic; /* Italic style for the note */
+    color: #555; /* Optional: Change the color to a lighter shade for better visibility */
+}
+
+/* Rotates emoji 45 degrees. Using this to turn a black square into a black diamond. */
+.rotate-emoji {
+  display: inline-block; /* Make it an inline-block to apply transform */
+  transform: rotate(45deg); /* Rotate 45 degrees */
+  font-size: 1.25rem; /* Adjust size if necessary */
+}
