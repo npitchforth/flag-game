@@ -7,12 +7,16 @@ module.exports = (env, argv) => {
   
   return {
     mode: isProduction ? 'production' : 'development',
+    devtool: isProduction ? 'source-map' : 'eval-source-map',
     entry: './src/index.jsx',
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: 'bundle.js',
       publicPath: '/',
       clean: true // This replaces the rm -rf dist command
+    },
+    optimization: {
+      minimize: isProduction
     },
     module: {
       rules: [

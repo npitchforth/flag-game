@@ -9,6 +9,30 @@
 </head>
 <body>
   <div id="root"></div>
+  <script>
+    // Debug logging
+    console.log('HTML loaded');
+    window.addEventListener('load', function() {
+      console.log('Window loaded');
+      console.log('Root element:', document.getElementById('root'));
+    });
+    
+    // Error handling
+    window.addEventListener('error', function(e) {
+      console.error('Global error:', e.error, e.filename, e.lineno);
+    });
+  </script>
   <script src="/countries.js"></script>
+  <script>
+    // Check if countries loaded
+    console.log('Countries loaded:', typeof window.countries !== 'undefined' ? window.countries.length : 'undefined');
+  </script>
+  <script src="/bundle.js"></script>
+  <script>
+    // Check if React loaded
+    setTimeout(function() {
+      console.log('React app mounted:', document.getElementById('root').innerHTML.length > 0);
+    }, 1000);
+  </script>
 </body>
 </html>
