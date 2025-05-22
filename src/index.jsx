@@ -40,8 +40,13 @@ class ErrorBoundary extends React.Component {
   }
 }
 
+let hasRendered = false;
+
 // Wait for DOM to be ready
 const renderApp = () => {
+  if (hasRendered) return;
+  hasRendered = true;
+
   const rootElement = document.getElementById('root');
   
   if (!rootElement) {
