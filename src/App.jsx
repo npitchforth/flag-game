@@ -153,27 +153,27 @@ const App = () => {
     }
   };
 
-  if (!gameStarted) {
-    return (
-      <div className="container">
-        <header><h1>Guessy Flaggy</h1></header>
-        <DifficultySelector
-          difficulty={difficulty}
-          onDifficultyChange={setDifficulty}
-          sovereignOnly={sovereignOnly}
-          onSovereignOnlyChange={setSovereignOnly}
-        />
-        <div className="button-container">
-          <button className="button success" onClick={startNewGame}>Start</button>
-          <button className="button" onClick={() => setShowHighScores(true)}>High Scores</button>
+  const renderMainContent = () => {
+    if (!gameStarted) {
+      return (
+        <div className="container">
+          <header><h1>Guessy Flaggy</h1></header>
+          <DifficultySelector
+            difficulty={difficulty}
+            onDifficultyChange={setDifficulty}
+            sovereignOnly={sovereignOnly}
+            onSovereignOnlyChange={setSovereignOnly}
+          />
+          <div className="button-container">
+            <button className="button success" onClick={startNewGame}>Start</button>
+            <button className="button" onClick={() => setShowHighScores(true)}>High Scores</button>
+          </div>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  if (gameOver) {
-    return (
-      <>
+    if (gameOver) {
+      return (
         <GameOverScreen
           correctAnswers={correctAnswers}
           totalAnswers={totalAnswers}
@@ -183,46 +183,47 @@ const App = () => {
           correctGuesses={correctGuesses}
           incorrectGuesses={incorrectGuesses}
         />
-        <HighScoresModal
-          isOpen={showHighScores}
-          onClose={() => setShowHighScores(false)}
-          highScores={highScores}
+      );
+    }
+
+    return (
+      <div className="container">
+        <GameHeader
+          score={score}
+          timeLeft={timeLeft}
+          currentStreak={currentStreak}
         />
-      </>
+        <ProgressBar
+          timeLeft={timeLeft}
+          totalTime={difficultySettings[difficulty].time}
+        />
+        {questionCountry && (
+          <>
+            <div className="question">
+              Which is the flag of <span style={{color: '#2563eb'}}>{questionCountry.name}</span>?
+            </div>
+            <FlagOptionsGrid
+              flagOptions={flagOptions}
+              questionCountry={questionCountry}
+              clickedFlag={clickedFlag}
+              onFlagClick={handleFlagClick}
+            />
+            <div className="feedback">{feedback}</div>
+          </>
+        )}
+      </div>
     );
-  }
+  };
 
   return (
-    <div className="container">
-      <GameHeader
-        score={score}
-        timeLeft={timeLeft}
-        currentStreak={currentStreak}
-      />
-      <ProgressBar
-        timeLeft={timeLeft}
-        totalTime={difficultySettings[difficulty].time}
-      />
-      {questionCountry && (
-        <>
-          <div className="question">
-            Which is the flag of <span style={{color: '#2563eb'}}>{questionCountry.name}</span>?
-          </div>
-          <FlagOptionsGrid
-            flagOptions={flagOptions}
-            questionCountry={questionCountry}
-            clickedFlag={clickedFlag}
-            onFlagClick={handleFlagClick}
-          />
-          <div className="feedback">{feedback}</div>
-        </>
-      )}
+    <>
+      {renderMainContent()}
       <HighScoresModal
         isOpen={showHighScores}
         onClose={() => setShowHighScores(false)}
         highScores={highScores}
       />
-    </div>
+    </>
   );
 };
 
