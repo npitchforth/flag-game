@@ -5,6 +5,7 @@ import FlagOptionsGrid from './components/FlagOptionsGrid';
 import DifficultySelector from './components/DifficultySelector';
 import GameOverScreen from './components/GameOverScreen';
 import HighScoresModal from './components/HighScoresModal';
+import { addHighScore } from './config/supabase'; 
 
 const App = () => {
   const [difficulty, setDifficulty] = useState('medium');
@@ -39,9 +40,9 @@ const App = () => {
   const progressBarRef = useRef(null);
 
   const difficultySettings = {
-    easy: { time: 45, optionCount: 4 },
-    medium: { time: 45, optionCount: 4 },
-    hard: { time: 45, optionCount: 4 }
+    easy: { time: 15, optionCount: 4 },
+    medium: { time: 15, optionCount: 4 },
+    hard: { time: 15, optionCount: 4 }
   };
 
   useEffect(() => () => clearInterval(timerRef.current), []);
@@ -77,16 +78,19 @@ const App = () => {
     setGameStarted(true);
   };
 
-  const endGame = () => {
+  const endGame = async () => {
     setGameOver(true);
     clearInterval(timerRef.current);
     const newScore = {
+      playerName: 'Player', // Replace with actual player name if available
       score,
       date: new Date().toISOString(),
       difficulty,
       accuracy: totalAnswers ? Math.round((correctAnswers / totalAnswers) * 100) : 0,
-      sovereignOnly
+      sovereignOnly,
+      streak: currentStreak,
     };
+  //save to local storage
     setHighScores(prev => [...prev, newScore]
       .sort((a, b) => {
         if (b.score !== a.score) return b.score - a.score;
@@ -94,9 +98,28 @@ const App = () => {
         if (a.sovereignOnly !== b.sovereignOnly) return (a.sovereignOnly === false ? -1 : 1);
         return new Date(a.date) - new Date(b.date);
       })
-      .slice(0, 10));
-    localStorage.setItem('flagGameHighScores', JSON.stringify([...highScores, newScore].slice(0, 10)));
+      .slice(0, 10)
+    );
+    localStorage.setItem('flagGameHighScores', JSON.stringify(
+      [...highScores, newScore]
+        .sort((a, b) => {
+          if (b.score !== a.score) return b.score - a.score;
+          if (b.accuracy !== a.accuracy) return b.accuracy - a.accuracy;
+          if (a.sovereignOnly !== b.sovereignOnly) return (a.sovereignOnly === false ? -1 : 1);
+          return new Date(a.date) - new Date(b.date);
+        })
+        .slice(0, 10)
+    ));
+  
+    // Save to Supabase
+    try {
+      await addHighScore(newScore);
+    } catch (error) {
+      console.error('Failed to save score to Supabase:', error);
+    }
   };
+  
+  
 
   const generateQuestion = (used = usedCountries) => {
     let pool = window.countries.filter(c => 
