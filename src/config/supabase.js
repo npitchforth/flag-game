@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://cuefsxwwatkdjjcpykqs.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN1ZWZzeHd3YXRrZGpqY3B5a3FzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0OTExNjAsImV4cCI6MjA2NDA2NzE2MH0.GoG6yOHAIcVQvELQlY1Qt9ng123I3IY_4OKGY0q0oOM';
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -23,3 +23,7 @@ export async function addHighScore(scoreData) {
   }
   return data;
 }
+
+//log the supabase key and url to console for debugging
+console.log('Supabase URL:', process.env.SUPABASE_URL);
+console.log('Supabase KEY:', process.env.SUPABASE_KEY);
