@@ -40,9 +40,9 @@ const App = () => {
   const progressBarRef = useRef(null);
 
   const difficultySettings = {
-    easy: { time: 15, optionCount: 4 },
-    medium: { time: 15, optionCount: 4 },
-    hard: { time: 15, optionCount: 4 }
+    easy: { time: 45, optionCount: 4 },
+    medium: { time: 45, optionCount: 4 },
+    hard: { time: 45, optionCount: 4 }
   };
 
   useEffect(() => () => clearInterval(timerRef.current), []);
