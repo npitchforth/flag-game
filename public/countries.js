@@ -1,5 +1,6 @@
 console.log('countries.js loaded');
 
+
 window.countries = [
   { code: 'ad', name: 'Andorra', difficulty: 'hard', entity: 'sovereign-state' },
   { code: 'ae', name: 'United Arab Emirates', difficulty: 'hard', entity: 'sovereign-state' },
