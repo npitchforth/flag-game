@@ -14,7 +14,7 @@ const HighScoresModal = ({ isOpen, onClose, highScores, loading }) => {
     level: difficultyLevel,
     displayName: difficultyLevel.charAt(0).toUpperCase() + difficultyLevel.slice(1),
     emoji: difficultyEmojis[difficultyLevel],
-    scores: highScores.filter(score => score.difficulty === difficultyLevel)
+    scores: highScores.filter(score => score.difficulty === difficultyLevel).slice(0, 4)
   }));
 
   return (
