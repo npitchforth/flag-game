@@ -1,6 +1,6 @@
 import React from 'react';
 
-const HighScoresModal = ({ isOpen, onClose, highScores }) => {
+const HighScoresModal = ({ isOpen, onClose, highScores, loading }) => {
   if (!isOpen) return null;
 
   const difficulties = ['easy', 'medium', 'hard'];
@@ -30,7 +30,9 @@ const HighScoresModal = ({ isOpen, onClose, highScores }) => {
           </p>
         </div>
 
-        {highScores.length === 0 ? (
+        {loading ? (
+          <div className="modal-loading">Loading high scores...</div>
+        ) : highScores.length === 0 ? (
           <div className="modal-empty">No high scores yet. Play a game to see your scores!</div>
         ) : (
           scoresByDifficulty.map(group => {
@@ -70,4 +72,4 @@ const HighScoresModal = ({ isOpen, onClose, highScores }) => {
   );
 };
 
-export default HighScoresModal; 
+export default HighScoresModal;

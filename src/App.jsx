@@ -5,7 +5,7 @@ import FlagOptionsGrid from './components/FlagOptionsGrid';
 import DifficultySelector from './components/DifficultySelector';
 import GameOverScreen from './components/GameOverScreen';
 import HighScoresModal from './components/HighScoresModal';
-import { addHighScore } from './config/supabase'; 
+import { addHighScore, getHighScores } from './config/supabase'; 
 
 const App = () => {
   const [difficulty, setDifficulty] = useState('medium');
@@ -23,18 +23,15 @@ const App = () => {
   const [timeLeft, setTimeLeft] = useState(60);
   const [gameOver, setGameOver] = useState(false);
   const [optionCount, setOptionCount] = useState(4);
-  const [highScores, setHighScores] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem('flagGameHighScores')) || [];
-    } catch {
-      return [];
-    }
-  });
+  const [highScores, setHighScores] = useState([]);
   const [showHighScores, setShowHighScores] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
   const [correctGuesses, setCorrectGuesses] = useState([]);
   const [incorrectGuesses, setIncorrectGuesses] = useState([]);
   const [sovereignOnly, setSovereignOnly] = useState(false);
+  const [isNewHighScore, setIsNewHighScore] = useState(false);
+  const [loadingHighScores, setLoadingHighScores] = useState(false);
+  const [highScoreDifficulty, setHighScoreDifficulty] = useState('');
 
   const timerRef = useRef(null);
   const progressBarRef = useRef(null);
@@ -45,16 +42,92 @@ const App = () => {
     hard: { time: 45, optionCount: 4 }
   };
 
-  useEffect(() => () => clearInterval(timerRef.current), []);
-  useEffect(() => {
-    if (timeLeft === 0) endGame();
-  }, [timeLeft]);
-  useEffect(() => {
-    if (difficulty) {
-      setTimeLeft(difficultySettings[difficulty].time);
-      setOptionCount(difficultySettings[difficulty].optionCount);
-    }
-  }, [difficulty]);
+    // Load high scores from Supabase on component mount
+    useEffect(() => {
+      loadHighScores();
+    }, []);
+  
+    const loadHighScores = async () => {
+      setLoadingHighScores(true);
+      try {
+        const scores = await getHighScores();
+        console.log('📊 Loaded high scores from Supabase:', scores);
+        setHighScores(scores);
+      } catch (error) {
+        console.error('Failed to load high scores:', error);
+        // Fallback to local storage if Supabase fails
+        try {
+          const localScores = JSON.parse(localStorage.getItem('flagGameHighScores')) || [];
+          console.log('📊 Fallback to local scores:', localScores);
+          setHighScores(localScores);
+        } catch {
+          setHighScores([]);
+        }
+      } finally {
+        setLoadingHighScores(false);
+      }
+    };
+  
+    const sortScores = (scores) => {
+      return scores.sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        if (b.accuracy !== a.accuracy) return b.accuracy - a.accuracy;
+        if (a.sovereignOnly !== b.sovereignOnly) return (a.sovereignOnly === false ? -1 : 1);
+        return new Date(a.date) - new Date(b.date);
+      });
+    };
+  
+    const isTopScoreForDifficulty = (newScore, existingScores, difficulty) => {
+      console.log('🏆 Checking if top score for difficulty:', difficulty);
+      console.log('🏆 New score:', newScore);
+      
+      // Filter existing scores by difficulty
+      const difficultyScores = existingScores.filter(score => score.difficulty === difficulty);
+      console.log('🏆 Existing scores for', difficulty, ':', difficultyScores);
+      
+      if (difficultyScores.length === 0) {
+        console.log('🏆 No existing scores for this difficulty - this is the top score!');
+        return true;
+      }
+      
+      // Get the current top score for this difficulty
+      const sortedExisting = sortScores([...difficultyScores]);
+      const currentTopScore = sortedExisting[0];
+      console.log('🏆 Current top score for', difficulty, ':', currentTopScore);
+      
+      // Compare new score with current top score using the same logic as sorting
+      let isNewTop = false;
+      
+      if (newScore.score > currentTopScore.score) {
+        isNewTop = true;
+      } else if (newScore.score === currentTopScore.score) {
+        if (newScore.accuracy > currentTopScore.accuracy) {
+          isNewTop = true;
+        } else if (newScore.accuracy === currentTopScore.accuracy) {
+          // Check sovereign preference (non-sovereign is better)
+          if (newScore.sovereignOnly === false && currentTopScore.sovereignOnly === true) {
+            isNewTop = true;
+          } else if (newScore.sovereignOnly === currentTopScore.sovereignOnly) {
+            // If all else equal, newer date wins (this should rarely happen)
+            isNewTop = new Date(newScore.date) >= new Date(currentTopScore.date);
+          }
+        }
+      }
+      
+      console.log('🏆 Is new top score for', difficulty, '?', isNewTop);
+      return isNewTop;
+    };
+  
+    useEffect(() => () => clearInterval(timerRef.current), []);
+    useEffect(() => {
+      if (timeLeft === 0) endGame();
+    }, [timeLeft]);
+    useEffect(() => {
+      if (difficulty) {
+        setTimeLeft(difficultySettings[difficulty].time);
+        setOptionCount(difficultySettings[difficulty].optionCount);
+      }
+    }, [difficulty]);
 
   const startNewGame = () => {
     if (!window.countries || window.countries.length === 0) {
@@ -72,6 +145,9 @@ const App = () => {
     setFeedback('');
     setCorrectGuesses([]);
     setIncorrectGuesses([]);
+    setIsNewHighScore(false);
+    setHighScoreDifficulty('');
+    console.log('🎮 New game started, isNewHighScore reset to false');
     clearInterval(timerRef.current);
     timerRef.current = setInterval(() => setTimeLeft(t => t - 1), 1000);
     generateQuestion([]);
@@ -79,8 +155,10 @@ const App = () => {
   };
 
   const endGame = async () => {
+    console.log('🎮 Game ending...');
     setGameOver(true);
     clearInterval(timerRef.current);
+    
     const newScore = {
       playerName: 'Player', // Replace with actual player name if available
       score,
@@ -90,36 +168,51 @@ const App = () => {
       sovereignOnly,
       streak: currentStreak,
     };
-  //save to local storage
-    setHighScores(prev => [...prev, newScore]
-      .sort((a, b) => {
-        if (b.score !== a.score) return b.score - a.score;
-        if (b.accuracy !== a.accuracy) return b.accuracy - a.accuracy;
-        if (a.sovereignOnly !== b.sovereignOnly) return (a.sovereignOnly === false ? -1 : 1);
-        return new Date(a.date) - new Date(b.date);
-      })
-      .slice(0, 10)
-    );
-    localStorage.setItem('flagGameHighScores', JSON.stringify(
-      [...highScores, newScore]
-        .sort((a, b) => {
-          if (b.score !== a.score) return b.score - a.score;
-          if (b.accuracy !== a.accuracy) return b.accuracy - a.accuracy;
-          if (a.sovereignOnly !== b.sovereignOnly) return (a.sovereignOnly === false ? -1 : 1);
-          return new Date(a.date) - new Date(b.date);
-        })
-        .slice(0, 10)
-    ));
+
+    console.log('🎮 Final game stats:', {
+      score,
+      correctAnswers,
+      totalAnswers,
+      currentStreak,
+      difficulty,
+      sovereignOnly
+    });
+
+    // Check if this is a new high score before saving
+    console.log('🎮 Current high scores before check:', highScores);
+    const isNewHigh = isTopScoreForDifficulty(newScore, highScores, difficulty);
+    console.log('🎮 Setting isNewHighScore to:', isNewHigh);
+    setIsNewHighScore(isNewHigh);
+
+    // Set the difficulty for which the high score was achieved
+    if (isNewHigh) {
+      setHighScoreDifficulty(difficulty);
+    }
+
+    // Save to local storage as backup
+    const updatedLocalScores = sortScores([...highScores, newScore]).slice(0, 10);
+    localStorage.setItem('flagGameHighScores', JSON.stringify(updatedLocalScores));
+    console.log('🎮 Saved to local storage:', updatedLocalScores);
   
     // Save to Supabase
     try {
+      console.log('🎮 Saving to Supabase...');
       await addHighScore(newScore);
+      console.log('🎮 Successfully saved to Supabase');
+      // Reload high scores from Supabase after saving
+      console.log('🎮 Reloading high scores from Supabase...');
+      await loadHighScores();
     } catch (error) {
       console.error('Failed to save score to Supabase:', error);
+      // Update local state if Supabase fails
+      setHighScores(updatedLocalScores);
     }
   };
-  
-  
+
+  // Debug the isNewHighScore state
+  useEffect(() => {
+    console.log('🏆 isNewHighScore state changed to:', isNewHighScore);
+  }, [isNewHighScore]);
 
   const generateQuestion = (used = usedCountries) => {
     let pool = window.countries.filter(c => 
@@ -189,13 +282,16 @@ const App = () => {
           />
           <div className="button-container">
             <button className="button success" onClick={startNewGame}>Start</button>
-            <button className="button" onClick={() => setShowHighScores(true)}>High Scores</button>
+            <button className="button" onClick={() => setShowHighScores(true)}>
+              High Scores {loadingHighScores && '(Loading...)'}
+            </button>
           </div>
         </div>
       );
     }
 
     if (gameOver) {
+      console.log('🎮 Rendering GameOverScreen with isNewHighScore:', isNewHighScore);
       return (
         <GameOverScreen
           correctAnswers={correctAnswers}
@@ -205,6 +301,8 @@ const App = () => {
           onShowHighScores={() => setShowHighScores(true)}
           correctGuesses={correctGuesses}
           incorrectGuesses={incorrectGuesses}
+          isNewHighScore={isNewHighScore}
+          highScoreDifficulty={highScoreDifficulty}
         />
       );
     }
@@ -245,9 +343,10 @@ const App = () => {
         isOpen={showHighScores}
         onClose={() => setShowHighScores(false)}
         highScores={highScores}
+        loading={loadingHighScores}
       />
     </>
   );
 };
 
-export default App; 
+export default App;

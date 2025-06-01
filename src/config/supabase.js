@@ -24,6 +24,28 @@ export async function addHighScore(scoreData) {
   return data;
 }
 
-//log the supabase key and url to console for debugging
-console.log('Supabase URL:', process.env.SUPABASE_URL);
-console.log('Supabase KEY:', process.env.SUPABASE_KEY);
+export async function getHighScores() {
+  const { data, error } = await supabase
+    .from('high_scores')
+    .select('*')
+    .order('score', { ascending: false })
+    .order('accuracy', { ascending: false })
+    .order('created_at', { ascending: true });
+    
+  if (error) {
+    console.error('Error fetching high scores:', error);
+    return [];
+  }
+  
+  // Transform the data to match the expected format
+  return data.map(score => ({
+    playerName: score.player_name,
+    score: score.score,
+    date: score.created_at,
+    difficulty: score.difficulty,
+    accuracy: score.accuracy,
+    sovereignOnly: score.sovereign_only,
+    streak: score.streak
+  }));
+}
+

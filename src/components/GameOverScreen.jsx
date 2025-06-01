@@ -7,13 +7,44 @@ const GameOverScreen = ({
   onPlayAgain,
   onShowHighScores,
   correctGuesses,
-  incorrectGuesses
+  incorrectGuesses,
+  isNewHighScore,
+  highScoreDifficulty
 }) => {
   const getAccuracy = () => totalAnswers ? Math.round((correctAnswers / totalAnswers) * 100) : 0;
+
+  const getDifficultyDisplayName = (difficulty) => {
+    return difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+  };
+
+  const getDifficultyEmoji = (difficulty) => {
+    const emojis = {
+      easy: '🟢',
+      medium: '🟦', 
+      hard: '⬛'
+    };
+    return emojis[difficulty] || '';
+  };
+
+  console.log('🎮 GameOverScreen rendered with props:', {
+    correctAnswers,
+    totalAnswers,
+    streak,
+    isNewHighScore,
+    highScoreDifficulty,
+    correctGuessesCount: correctGuesses?.length,
+    incorrectGuessesCount: incorrectGuesses?.length
+  });
 
   return (
     <div className="container">
       <header><h1>Game Over</h1></header>
+      {isNewHighScore && (
+        <div className="new-high-score-banner">
+           New {getDifficultyDisplayName(highScoreDifficulty)} Level High Score! 
+        </div>
+      )}
+      
       <div className="game-over">
         <div className="game-stats">
           <div className="stat">
@@ -83,4 +114,4 @@ const GameOverScreen = ({
   );
 };
 
-export default GameOverScreen; 
+export default GameOverScreen;

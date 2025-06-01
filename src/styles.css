@@ -552,3 +552,57 @@ h1 {
   transform: rotate(45deg); /* Rotate 45 degrees */
   font-size: 1.25rem; /* Adjust size if necessary */
 }
+
+
+.new-high-score-banner {
+  background: linear-gradient(45deg, #ffd700, #ffed4e);
+  color: #1a1a1a;
+  text-align: center;
+  padding: 15px;
+  margin: 20px 0;
+  border-radius: 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+  position: relative;
+  animation: celebrateGlowBounce 2s ease-in-out infinite;
+}
+.new-high-score-banner::after {
+  content: "✨";
+  position: absolute;
+  top: -10px;
+  right: 10px;
+  animation: sparkle 1s ease-in-out infinite alternate;
+}
+.new-high-score-banner span {
+  display: inline-block;
+  animation: textPop 0.5s ease-in-out infinite alternate;
+}
+@keyframes celebrateGlowBounce {
+  0%, 100% {
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+    transform: scale(1.02) translateY(-8px);
+  }
+}
+@keyframes sparkle {
+  0% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+@keyframes textPop {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
