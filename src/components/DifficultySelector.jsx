@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const DifficultySelector = ({ 
-  difficulty, 
-  onDifficultyChange, 
-  sovereignOnly, 
-  onSovereignOnlyChange 
+const DifficultySelector = ({
+  difficulty,
+  onDifficultyChange,
+  sovereignOnly,
+  onSovereignOnlyChange
 }) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+
   return (
     <div className="centered-text">
       <h2>Select Difficulty</h2>
@@ -31,10 +33,24 @@ const DifficultySelector = ({
           />
           <span className="switch-slider"></span>
         </label>
+       
         <span className="toggle-label">Only Include Countries</span>
+        <span
+          className="tooltip-icon"
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+          onClick={() => setShowTooltip(!showTooltip)}
+        >
+          ?
+          {showTooltip && (
+            <span className="tooltip-text">
+              Includes flags from UN member states. Excludes all other flags.
+            </span>
+          )}
+        </span>
       </div>
     </div>
   );
 };
 
-export default DifficultySelector; 
+export default DifficultySelector;
