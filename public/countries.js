@@ -1,5 +1,5 @@
 console.log('countries.js loaded');
-
+//test for github//*
 
 window.countries = [
   { code: 'ad', name: 'Andorra', difficulty: 'hard', entity: 'sovereign-state' },
