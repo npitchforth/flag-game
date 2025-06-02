@@ -44,7 +44,7 @@ const DifficultySelector = ({
           ?
           {showTooltip && (
             <span className="tooltip-text">
-              Includes flags from UN member states. Excludes all other flags.
+              Includes UN member & observer states. Excludes all other flags.
             </span>
           )}
         </span>
