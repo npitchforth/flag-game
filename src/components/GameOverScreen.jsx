@@ -9,7 +9,9 @@ const GameOverScreen = ({
   correctGuesses,
   incorrectGuesses,
   isNewHighScore,
-  highScoreDifficulty
+  highScoreDifficulty,
+  leaderboardPosition,
+  leaderboardDifficulty
 }) => {
   const getAccuracy = () => totalAnswers ? Math.round((correctAnswers / totalAnswers) * 100) : 0;
 
@@ -26,12 +28,23 @@ const GameOverScreen = ({
     return emojis[difficulty] || '';
   };
 
+  const getPositionText = (position) => {
+    const positions = {
+      2: '2nd',
+      3: '3rd',
+      4: '4th'
+    };
+    return positions[position] || '';
+  };
+
   console.log('🎮 GameOverScreen rendered with props:', {
     correctAnswers,
     totalAnswers,
     streak,
     isNewHighScore,
     highScoreDifficulty,
+    leaderboardPosition,
+    leaderboardDifficulty,
     correctGuessesCount: correctGuesses?.length,
     incorrectGuessesCount: incorrectGuesses?.length
   });
@@ -39,9 +52,18 @@ const GameOverScreen = ({
   return (
     <div className="container">
       <header><h1>Game Over</h1></header>
+      
+      {/* High Score Banner - shown for 1st place */}
       {isNewHighScore && (
         <div className="new-high-score-banner">
            New {getDifficultyDisplayName(highScoreDifficulty)} Level High Score! 
+        </div>
+      )}
+      
+      {/* Leaderboard Banner - shown for 2nd, 3rd, 4th place */}
+      {!isNewHighScore && leaderboardPosition && (
+        <div className="leaderboard-banner">
+           You Made the {getDifficultyDisplayName(leaderboardDifficulty)} Level Leaderboard! ({getPositionText(leaderboardPosition)} Place)
         </div>
       )}
       

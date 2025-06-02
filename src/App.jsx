@@ -32,6 +32,9 @@ const App = () => {
   const [isNewHighScore, setIsNewHighScore] = useState(false);
   const [loadingHighScores, setLoadingHighScores] = useState(false);
   const [highScoreDifficulty, setHighScoreDifficulty] = useState('');
+  // New states for leaderboard positioning
+  const [leaderboardPosition, setLeaderboardPosition] = useState(null);
+  const [leaderboardDifficulty, setLeaderboardDifficulty] = useState('');
 
   const timerRef = useRef(null);
   const progressBarRef = useRef(null);
@@ -117,6 +120,39 @@ const App = () => {
       console.log('🏆 Is new top score for', difficulty, '?', isNewTop);
       return isNewTop;
     };
+
+    // New function to check leaderboard position (2nd, 3rd, 4th)
+    const checkLeaderboardPosition = (newScore, existingScores, difficulty) => {
+      console.log('🏅 Checking leaderboard position for difficulty:', difficulty);
+      
+      // Filter existing scores by difficulty
+      const difficultyScores = existingScores.filter(score => score.difficulty === difficulty);
+      console.log('🏅 Existing scores for', difficulty, ':', difficultyScores);
+      
+      // Add the new score to the list and sort
+      const allScores = [...difficultyScores, newScore];
+      const sortedScores = sortScores(allScores);
+      
+      console.log('🏅 All scores sorted:', sortedScores);
+      
+      // Find the position of the new score
+      const newScoreIndex = sortedScores.findIndex(score => 
+        score.score === newScore.score &&
+        score.accuracy === newScore.accuracy &&
+        score.sovereignOnly === newScore.sovereignOnly &&
+        score.date === newScore.date
+      );
+      
+      const position = newScoreIndex + 1; // Convert to 1-based position
+      console.log('🏅 New score position:', position);
+      
+      // Return position if it's 2nd, 3rd, or 4th place
+      if (position >= 2 && position <= 4) {
+        return position;
+      }
+      
+      return null;
+    };
   
     useEffect(() => () => clearInterval(timerRef.current), []);
     useEffect(() => {
@@ -147,6 +183,8 @@ const App = () => {
     setIncorrectGuesses([]);
     setIsNewHighScore(false);
     setHighScoreDifficulty('');
+    setLeaderboardPosition(null);
+    setLeaderboardDifficulty('');
     console.log('🎮 New game started, isNewHighScore reset to false');
     clearInterval(timerRef.current);
     timerRef.current = setInterval(() => setTimeLeft(t => t - 1), 1000);
@@ -189,6 +227,16 @@ const App = () => {
       setHighScoreDifficulty(difficulty);
     }
 
+    // Check for leaderboard position (2nd, 3rd, 4th) only if not a new high score
+    if (!isNewHigh) {
+      const position = checkLeaderboardPosition(newScore, highScores, difficulty);
+      console.log('🏅 Leaderboard position:', position);
+      setLeaderboardPosition(position);
+      if (position) {
+        setLeaderboardDifficulty(difficulty);
+      }
+    }
+
     // Save to local storage as backup
     const updatedLocalScores = sortScores([...highScores, newScore]).slice(0, 10);
     localStorage.setItem('flagGameHighScores', JSON.stringify(updatedLocalScores));
@@ -213,6 +261,11 @@ const App = () => {
   useEffect(() => {
     console.log('🏆 isNewHighScore state changed to:', isNewHighScore);
   }, [isNewHighScore]);
+
+  // Debug the leaderboard position state
+  useEffect(() => {
+    console.log('🏅 leaderboardPosition state changed to:', leaderboardPosition);
+  }, [leaderboardPosition]);
 
   const generateQuestion = (used = usedCountries) => {
     let pool = window.countries.filter(c => 
@@ -292,6 +345,7 @@ const App = () => {
 
     if (gameOver) {
       console.log('🎮 Rendering GameOverScreen with isNewHighScore:', isNewHighScore);
+      console.log('🎮 Rendering GameOverScreen with leaderboardPosition:', leaderboardPosition);
       return (
         <GameOverScreen
           correctAnswers={correctAnswers}
@@ -303,6 +357,8 @@ const App = () => {
           incorrectGuesses={incorrectGuesses}
           isNewHighScore={isNewHighScore}
           highScoreDifficulty={highScoreDifficulty}
+          leaderboardPosition={leaderboardPosition}
+          leaderboardDifficulty={leaderboardDifficulty}
         />
       );
     }
