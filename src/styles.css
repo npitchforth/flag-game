@@ -569,6 +569,7 @@ h1 {
 }
 .new-high-score-banner::after {
   content: "✨";
+  font-size: 3rem;
   position: absolute;
   top: -10px;
   right: 10px;
