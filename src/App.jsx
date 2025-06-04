@@ -6,6 +6,7 @@ import DifficultySelector from './components/DifficultySelector';
 import GameOverScreen from './components/GameOverScreen';
 import HighScoresModal from './components/HighScoresModal';
 import { addHighScore, getHighScores } from './config/supabase'; 
+import { supabase } from './config/supabase';
 
 const App = () => {
   const [difficulty, setDifficulty] = useState('medium');
@@ -32,17 +33,18 @@ const App = () => {
   const [isNewHighScore, setIsNewHighScore] = useState(false);
   const [loadingHighScores, setLoadingHighScores] = useState(false);
   const [highScoreDifficulty, setHighScoreDifficulty] = useState('');
-  // New states for leaderboard positioning
   const [leaderboardPosition, setLeaderboardPosition] = useState(null);
   const [leaderboardDifficulty, setLeaderboardDifficulty] = useState('');
+  const [showForm, setShowForm] = useState(false);
+  const [playerName, setPlayerName] = useState('');
 
   const timerRef = useRef(null);
   const progressBarRef = useRef(null);
 
   const difficultySettings = {
-    easy: { time: 45, optionCount: 4 },
-    medium: { time: 45, optionCount: 4 },
-    hard: { time: 45, optionCount: 4 }
+    easy: { time: 16, optionCount: 4 },
+    medium: { time: 16, optionCount: 4 },
+    hard: { time: 16, optionCount: 4 }
   };
 
     // Load high scores from Supabase on component mount
@@ -52,6 +54,7 @@ const App = () => {
   
     const loadHighScores = async () => {
       setLoadingHighScores(true);
+      console.log('Loading high scores from Supabase...');
       try {
         const scores = await getHighScores();
         console.log('📊 Loaded high scores from Supabase:', scores);
@@ -225,6 +228,7 @@ const App = () => {
     // Set the difficulty for which the high score was achieved
     if (isNewHigh) {
       setHighScoreDifficulty(difficulty);
+      setShowForm(true);
     }
 
     // Check for leaderboard position (2nd, 3rd, 4th) only if not a new high score
@@ -234,6 +238,7 @@ const App = () => {
       setLeaderboardPosition(position);
       if (position) {
         setLeaderboardDifficulty(difficulty);
+        setShowForm(true);
       }
     }
 
@@ -322,6 +327,73 @@ const App = () => {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Use "Anonymous" if playerName is empty
+    const nameToSubmit = playerName.trim() === '' ? 'Anonymous' : playerName;
+    console.log('Player Name:', nameToSubmit); // Log the player name
+
+    // Fetch the most recent record from Supabase
+    try {
+      const { data, error } = await supabase
+        .from('high_scores')
+        .select('*')
+        .order('created_at', { ascending: false }) // Assuming you have a created_at column
+        .limit(1)
+        .single(); // Fetch the most recent record
+
+      if (error) {
+        console.error('Error fetching the most recent record:', error);
+        return; // Exit if there's an error
+      }
+
+      // Log the fetched data to diagnose the issue
+      console.log('Fetched most recent record from Supabase:', data);
+      console.log('Record ID to update:', data.id);
+      console.log('Current player_name:', data.player_name);
+
+      // Check if the fetched score matches the completed game score
+      if (data.score !== score) {
+        console.error('Score fetched from Supabase table does not match the completed game score');
+        return; // Exit if the scores do not match
+      }
+
+      // Test the update with detailed logging
+      console.log('Attempting to update record with ID:', data.id);
+      console.log('New player name:', nameToSubmit); // Use nameToSubmit here
+
+      const updateResult = await supabase
+        .from('high_scores')
+        .update({ player_name: nameToSubmit }) // Update the player_name field with nameToSubmit
+        .eq('id', data.id)
+        .select(); // Add .select() to return the updated record
+
+      console.log('Update result:', updateResult);
+      console.log('Update data:', updateResult.data);
+      console.log('Update error:', updateResult.error);
+
+      if (updateResult.error) {
+        console.error('Error updating the record:', updateResult.error);
+        console.error('Error details:', JSON.stringify(updateResult.error, null, 2));
+      } else {
+        console.log('Supabase table has been updated with the player name:', nameToSubmit);
+        console.log('Updated record:', updateResult.data);
+        
+        // Refresh the high scores after updating
+        console.log('Refreshing high scores after update...');
+        await loadHighScores(); // Fetch the updated high scores
+        console.log('High scores refreshed.');
+      }
+    } catch (error) {
+      console.error('An unexpected error occurred:', error);
+      console.error('Error stack:', error.stack);
+    }
+
+    setShowForm(false); // Hide the form after submission
+    setPlayerName(''); // Reset the input field
+  };
+
   const renderMainContent = () => {
     if (!gameStarted) {
       return (
@@ -359,6 +431,10 @@ const App = () => {
           highScoreDifficulty={highScoreDifficulty}
           leaderboardPosition={leaderboardPosition}
           leaderboardDifficulty={leaderboardDifficulty}
+          showForm={showForm}
+          playerName={playerName}
+          onPlayerNameChange={setPlayerName}
+          onSubmit={handleSubmit}
         />
       );
     }

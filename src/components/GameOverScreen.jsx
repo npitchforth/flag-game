@@ -11,7 +11,11 @@ const GameOverScreen = ({
   isNewHighScore,
   highScoreDifficulty,
   leaderboardPosition,
-  leaderboardDifficulty
+  leaderboardDifficulty,
+  showForm,
+  playerName,
+  onPlayerNameChange,
+  onSubmit
 }) => {
   const getAccuracy = () => totalAnswers ? Math.round((correctAnswers / totalAnswers) * 100) : 0;
 
@@ -65,6 +69,20 @@ const GameOverScreen = ({
         <div className="leaderboard-banner">
            You Made the {getDifficultyDisplayName(leaderboardDifficulty)} Level Leaderboard! ({getPositionText(leaderboardPosition)} Place)
         </div>
+      )}
+      
+      {showForm && (
+        <form onSubmit={onSubmit} className="player-name-form">
+          <input
+            type="text"
+            value={playerName}
+            onChange={(e) => onPlayerNameChange(e.target.value)}
+            placeholder="Enter your name"
+            maxLength={25}
+            className="player-name-input"
+          />
+          <button type="submit" className="submit-button">Submit</button>
+        </form>
       )}
       
       <div className="game-over">

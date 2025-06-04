@@ -44,6 +44,7 @@ const HighScoresModal = ({ isOpen, onClose, highScores, loading }) => {
                   </h3>
                   <div className="high-scores-header">
                     <span className="header-rank">Rank</span>
+                    <span className="header-name">Name</span> {/* Player Name */}
                     <span className="header-score">Score</span>
                     <span className="header-accuracy">Accuracy</span>
                     <span className="header-date">Date</span>
@@ -52,6 +53,7 @@ const HighScoresModal = ({ isOpen, onClose, highScores, loading }) => {
                     {group.scores.map((score, index) => (
                       <li className="high-score-entry" key={index}>
                         <span className="entry-position">{index + 1}.</span>
+                        <span className="entry-name">{score.playerName}</span> 
                         <span className="entry-points">{score.score}{score.sovereignOnly ? <sup>*</sup> : null}</span>
                         <span className="entry-accuracy">{score.accuracy}%</span>
                         <span className="entry-date">{new Date(score.date).toLocaleDateString()}</span>

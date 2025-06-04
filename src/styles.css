@@ -711,3 +711,44 @@ h1 {
     height: 24px;
   }
 }
+
+/* styles.css */
+
+/* ... existing styles ... */
+
+.player-name-form {
+  margin-top: 20px; /* Space above the form */
+  margin-bottom: 20px; /* Space below the form */
+  display: flex; /* Align input and button side by side */
+  justify-content: center; /* Center the form */
+}
+
+.player-name-input {
+  padding: 0.8rem 1.5rem; /* Padding inside the input */
+  border: 1px solid #ccc; /* Border around the input */
+  border-radius: 6px; /* Rounded corners */
+  font-size: 1.5rem; /* Font size */
+  width: 200px; /* Width of the input field */
+  margin-right: 0.5rem; /* Space between input and button */
+}
+
+.submit-button {
+  background: #2563eb; 
+  color: #fff; 
+  border: none; 
+  padding: 0.8rem 1.5rem; 
+  font-size: 1rem; 
+  border-radius: 6px; 
+  cursor: pointer; 
+  transition: background 0.18s; 
+  font-weight: 600; 
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04); 
+margin-bottom: 0.5rem; /* Margins for the button */
+margin-top: 1.5rem;
+margin-right: 0.5rem;
+margin-left: 0.5rem;
+}
+
+.submit-button:hover {
+  background-color:#1e40af; /* Darker blue on hover */
+}

@@ -27,7 +27,7 @@ export async function addHighScore(scoreData) {
 export async function getHighScores() {
   const { data, error } = await supabase
     .from('high_scores')
-    .select('*')
+    .select('*') // Ensure this includes player_name
     .order('score', { ascending: false })
     .order('accuracy', { ascending: false })
     .order('created_at', { ascending: true });
@@ -39,7 +39,7 @@ export async function getHighScores() {
   
   // Transform the data to match the expected format
   return data.map(score => ({
-    playerName: score.player_name,
+    playerName: score.player_name, // Ensure this is included
     score: score.score,
     date: score.created_at,
     difficulty: score.difficulty,
