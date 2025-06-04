@@ -42,9 +42,9 @@ const App = () => {
   const progressBarRef = useRef(null);
 
   const difficultySettings = {
-    easy: { time: 16, optionCount: 4 },
-    medium: { time: 16, optionCount: 4 },
-    hard: { time: 16, optionCount: 4 }
+    easy: { time: 45, optionCount: 4 },
+    medium: { time: 45, optionCount: 4 },
+    hard: { time: 45, optionCount: 4 }
   };
 
     // Load high scores from Supabase on component mount
