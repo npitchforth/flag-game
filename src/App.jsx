@@ -44,7 +44,7 @@ const App = () => {
   const difficultySettings = {
     easy: { time: 45, optionCount: 4 },
     medium: { time: 45, optionCount: 4 },
-    hard: { time: 45, optionCount: 4 }
+    hard: { time:45, optionCount: 4 }
   };
 
     // Load high scores from Supabase on component mount
@@ -272,16 +272,23 @@ const App = () => {
     console.log('🏅 leaderboardPosition state changed to:', leaderboardPosition);
   }, [leaderboardPosition]);
 
+
   const generateQuestion = (used = usedCountries) => {
+    console.log('All countries:', window.countries.map(country => country.code));  // Log all country codes to be considered prior to filtering
+  console.log('Used countries:', used);     // Log the used countries
     let pool = window.countries.filter(c => 
       difficulty === 'easy' ? c.difficulty === 'easy' :
       difficulty === 'medium' ? c.difficulty === 'medium' :
       !c.difficulty || c.difficulty === 'hard'
     );
     
+    console.log('Filtered pool (after difficulty filter):', pool);//Log the pool of countries to be used 
+
     if (sovereignOnly) {
       pool = pool.filter(c => c.entity === 'sovereign-state');
     }
+    
+    console.log('Filtered pool (after difficulty and sovereign filters):', pool);//Log the pool of countries to be used 
     
     const available = pool.filter(c => !used.includes(c.code));
     if (available.length < optionCount) {

@@ -24,9 +24,17 @@ const FlagOption = ({ country, onClick, isClicked, isCorrect }) => {
   );
 };
 
-// Helper function to get flag image URL
-const getFlagImage = (country) => {
-  return `https://flagcdn.com/w320/${country.code.toLowerCase()}.png`;
+export const getFlagImage = (country) => {
+  console.log('Getting flag image for country:', country);
+  if (country.flagSource === 'local') {
+    const localPath = `/assets/flags/${country.code.toLowerCase()}.png`;
+    console.log('Local flag path:', localPath);
+    return localPath;
+  } else {
+    const externalPath = `https://flagcdn.com/w320/${country.code.toLowerCase()}.png`;
+    console.log('External flag path:', externalPath);
+    return externalPath;
+  }
 };
 
 export default FlagOption; 

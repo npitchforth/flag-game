@@ -1,4 +1,5 @@
 import React from 'react';
+import { getFlagImage } from './FlagOption'; // Adjust the path as necessary
 
 const GameOverScreen = ({
   correctAnswers,
@@ -115,15 +116,19 @@ const GameOverScreen = ({
             <h3>Correct</h3>
             {correctGuesses.length > 0 ? (
               <div className="flag-list">
-                {correctGuesses.map((country, index) => (
-                  <div key={index} className="flag-item">
-                    <img
-                      src={`https://flagcdn.com/w320/${country.code.toLowerCase()}.png`}
-                      alt={country.name}
-                    />
-                    <span>{country.name}</span>
-                  </div>
-                ))}
+                {correctGuesses.map((country, index) => {
+                  const flagPath = getFlagImage(country);
+                  console.log('Correct guess country:', country, 'Flag path:', flagPath);
+                  return (
+                    <div key={index} className="flag-item">
+                      <img
+                        src={flagPath}
+                        alt={country.name}
+                      />
+                      <span>{country.name}</span>
+                    </div>
+                  );
+                })}
               </div>
             ) : (
               <div className="empty-message">None</div>
@@ -134,15 +139,19 @@ const GameOverScreen = ({
             <h3>Incorrect</h3>
             {incorrectGuesses.length > 0 ? (
               <div className="flag-list">
-                {incorrectGuesses.map((country, index) => (
-                  <div key={index} className="flag-item">
-                    <img
-                      src={`https://flagcdn.com/w320/${country.code.toLowerCase()}.png`}
-                      alt={country.name}
-                    />
-                    <span>{country.name}</span>
-                  </div>
-                ))}
+                {incorrectGuesses.map((country, index) => {
+                  const flagPath = getFlagImage(country);
+                  console.log('Incorrect guess country:', country, 'Flag path:', flagPath);
+                  return (
+                    <div key={index} className="flag-item">
+                      <img
+                        src={flagPath}
+                        alt={country.name}
+                      />
+                      <span>{country.name}</span>
+                    </div>
+                  );
+                })}
               </div>
             ) : (
               <div className="empty-message">None</div>
