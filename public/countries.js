@@ -321,6 +321,21 @@ window.countries = [
    { code: 'au-qld', name: 'Queensland', difficulty: 'medium', entity: 'state', flagSource: 'local' },
    { code: 'au-vic', name: 'Victoria', difficulty: 'medium', entity: 'state', flagSource: 'local' },
    { code: 'au-nsw', name: 'New South Wales', difficulty: 'medium', entity: 'state', flagSource: 'local' }
+   { code: 'au-aboriginal', name: 'Australia (Aboriginal)', difficulty: 'easy', entity: 'other', flagSource: 'local' }
+   { code: 'eu', name: 'the European Union', difficulty: 'easy', entity: 'organisation', flagSource: 'local' }
+   { code: 'african-union', name: 'the African Union', difficulty: 'medium', entity: 'organisation', flagSource: 'local' }
+   { code: 'un', name: 'the United Nations)', difficulty: 'easy', entity: 'organisation', flagSource: 'local' }
+   { code: 'red-cross', name: 'The Red Cross', difficulty: 'easy', entity: 'organisation', flagSource: 'local' }
+   { code: 'olympic-movement', name: 'the Olympic Movement', difficulty: 'easy', entity: 'organisation', flagSource: 'local' }
+   { code: 'red-crescent', name: 'The Red Crescent', difficulty: 'medium', entity: 'organisation', flagSource: 'local' }
+   { code: 'torres-strait', name: 'Torres Strait Islanders', difficulty: 'medium', entity: 'other', flagSource: 'local' }
+   { code: 'maori', name: 'the New Zealand Māori', difficulty: 'medium', entity: 'other', flagSource: 'local' }
+   { code: 'romani', name: 'the Romani people', difficulty: 'hard', entity: 'other', flagSource: 'local' }
+   { code: 'Buddhism', name: 'Buddhism', difficulty: 'hard', entity: 'other', flagSource: 'local' }
+   { code: 'Christianity', name: 'Christianity', difficulty: 'hard', entity: 'other', flagSource: 'local' }
+   { code: 'Hinduism', name: 'Hinduism', difficulty: 'hard', entity: 'other', flagSource: 'local' } 
+   { code: 'arab-league', name: 'the Arab League', difficulty: 'hard', entity: 'organisation', flagSource: 'local' }
+ 
 ];
 
 const easyCountryCodes = countries.filter(c => c.difficulty === 'easy').map(c => c.code);
