@@ -65,11 +65,10 @@ module.exports = (env, argv) => {
     },
     devServer: {
       static: {
-        directory: path.join(__dirname, '/'),
+        directory: path.join(__dirname, 'dist'),
       },
-      port: 3001,
-      hot: false,
-      liveReload: false,
+      compress: true,
+      port: 9000,
       historyApiFallback: true,
       proxy: {
         '/flags': {
