@@ -1,12 +1,16 @@
 import React from 'react';
+import { Capacitor } from '@capacitor/core';
 
 const GameHeader = ({ score, timeLeft, currentStreak }) => {
   const getTimerClass = () => timeLeft <= 10 ? 'danger' : timeLeft <= 20 ? 'warning' : '';
 
+  // Check if the platform is mobile (iOS or Android)
+  const isMobile = Capacitor.getPlatform() === 'android' || Capacitor.getPlatform() === 'ios';
+
   return (
     <>
       <header>
-        <h1>Guessy Flaggy</h1>
+        <h1 style={{ padding: isMobile ? '20px' : '0' }}>Guessy Flaggy</h1>
       </header>
       <div className="game-info">
         <div className="game-stats">

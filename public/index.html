@@ -6,6 +6,31 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' https://flagcdn.com data: https:;">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <title>Flag Guess Game</title>
+  <style>
+    /* Hide Ionic modal handle - this will load after Ionic's CSS */
+    .modal-handle {
+      display: none !important;
+    }
+    
+    button.modal-handle {
+      display: none !important;
+    }
+    
+    ion-modal .modal-handle {
+      display: none !important;
+    }
+    
+    ion-modal button.modal-handle {
+      display: none !important;
+    }
+    
+    /* Alternative: Remove border but keep handle */
+    .modal-handle {
+      border: none !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+  </style>
 </head>
 <body>
   <div id="root"></div>

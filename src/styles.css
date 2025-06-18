@@ -197,26 +197,23 @@ margin-left: 0.5rem;
   color: #fff; /* Active text color */
 }
 
-/* Modal Overlay - Updated */
+/* Modal Overlay - Simplified and Fixed */
 .modal { 
   position: fixed; 
   top: 0; 
   left: 0; 
   width: 100vw; 
   height: 100vh; 
-  /* Use dynamic viewport height for better mobile support */
-  height: 100dvh; 
-  background: rgba(30, 41, 59, 0.32);
+  background: rgba(30, 41, 59, 0.5);
   display: flex; 
   align-items: center; 
   justify-content: center; 
-  z-index: 1000; 
+  z-index: 9999; 
   opacity: 0; 
   visibility: hidden; 
   transition: opacity 0.3s, visibility 0.3s; 
-  /* Ensure scrolling if needed */
   overflow-y: auto;
-  padding: 10px;
+  padding: 20px;
   box-sizing: border-box;
 }
 
@@ -225,31 +222,32 @@ margin-left: 0.5rem;
   visibility: visible; 
 }
 
-/* Modal Content - Updated */
+/* Modal Content - Unified for all platforms */
 .modal-content {
-  padding: 1.5rem 1rem 1rem 1rem;
-  width: 100%;
-  max-width: 600px; /* Set a reasonable max-width */
-  /* Use dynamic viewport height with fallback */
-  max-height: min(90vh, 90dvh);
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
   background: #f9fafb;
-  border-radius: 18px;
-  box-shadow: 0 8px 32px rgba(30, 41, 59, 0.18), 0 1.5px 6px rgba(0,0,0,0.10);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(30, 41, 59, 0.18);
   border: 1px solid #e5e7eb;
   animation: modal-fade-in 0.4s cubic-bezier(.4,0,.2,1);
   font-family: 'Inter', Arial, sans-serif;
-  /* Remove margin that was causing issues */
-  margin: 0;
-  /* Ensure minimum space for content */
-  min-height: min(50vh, 400px);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
 }
 
-/* Ensure all elements use border-box sizing */
-.modal-content * {
-box-sizing: border-box;
+/* Native app specific adjustments */
+.modal.native-app {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 10px;
+}
+
+.modal-content.native-content {
+  max-width: 95%;
+  max-height: 85vh;
 }
 
 @keyframes modal-fade-in {
@@ -262,164 +260,332 @@ box-sizing: border-box;
   display: flex; 
   justify-content: space-between; 
   align-items: center; 
-  margin-bottom: 1.2rem;
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
   border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 0.7rem;
+  flex-shrink: 0;
 }
+
 .modal-header h2 {
-  font-size: 1.35rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
   color: #1e293b;
   margin: 0;
 }
 
-/* Close Button */
+/* Modal Body - Scrollable content area */
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 1.5rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Close Button - Enhanced for mobile */
 .modal-close { 
   background: none; 
   border: none; 
-  font-size: 1.7rem; 
+  font-size: 2rem; 
   cursor: pointer; 
   color: #64748b;
-  transition: color 0.18s;
+  transition: all 0.2s;
   border-radius: 50%;
-  width: 2.2rem;
-  height: 2.2rem;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  flex-shrink: 0;
 }
-.modal-close:hover {
+
+.modal-close:hover,
+.modal-close:focus {
   background: #e0e7ef;
   color: #1e293b;
 }
 
-/* Styles for the new High Scores Modal UI */
-.high-scores-difficulty-group {
-margin-bottom: 1.5rem;
-padding-bottom: 1rem;
-border-bottom: 1px solid #e0e7ef;
-width: 100%; /* Ensure full width */
-box-sizing: border-box; /* Include padding/border in width calculation */
+.modal-close:active {
+  transform: scale(0.95);
+  background: #d1d5db;
 }
 
-.high-scores-difficulty-group:last-of-type {
-border-bottom: none; /* No border for the last group */
-margin-bottom: 0;
+/* High Score Note */
+.high-score-note {
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #666;
+  text-align: center;
+}
+
+/* High Scores Container */
+.high-scores-container {
+  padding: 1rem 0;
+}
+
+/* High Scores Difficulty Groups */
+.high-scores-difficulty-group {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e0e7ef;
+}
+
+.high-scores-difficulty-group:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
 }
 
 .difficulty-group-header {
-font-size: 1.25rem; /* Larger font for difficulty headers */
-font-weight: 600;
-color: #374151; /* Darker gray for header text */
-margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 1rem;
 }
 
+/* High Scores Header */
 .high-scores-header {
-display: flex;
-justify-content: space-between;
-padding: 0.5rem 0;
-margin: 0 0 0.5rem 0; /* Remove horizontal margins */
-border-bottom: 2px solid #e5e7eb;
-font-weight: 600;
-color: #4b5563;
-font-size: 0.9rem;
-width: 100%;
-box-sizing: border-box;
+  display: flex;
+  padding: 0.75rem 0 0.5rem 0;
+  border-bottom: 2px solid #e5e7eb;
+  font-weight: 600;
+  color: #4b5563;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
 }
 
-/* Adjust column widths to be more flexible */
-.header-rank, .entry-position {
-flex: 0 0 15%; /* Use percentage instead of fixed px */
-text-align: center;
-min-width: 30px; /* Minimum width for very small screens */
-}
-
-.header-name, .entry-name {
-flex: 1; /* Take remaining space */
-text-align: left;
-min-width: 80px; /* Minimum width */
-padding-right: 8px; /* Small padding instead of margin */
-overflow-wrap: break-word; /* Allow long names to wrap */
-}
-
-.header-score, .entry-points {
-flex: 0 0 18%; /* Use percentage */
-text-align: center;
-min-width: 50px;
-}
-
-.header-accuracy, .entry-accuracy {
-flex: 0 0 20%; /* Use percentage */
-text-align: center;
-min-width: 60px;
-}
-
-.header-date, .entry-date {
-flex: 0 0 22%; /* Use percentage */
-text-align: center;
-min-width: 70px;
-}
-
+/* High Scores List */
 .high-scores-list {
-list-style: none;
-padding: 0;
-margin: 0;
-width: 100%;
-box-sizing: border-box;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .high-score-entry {
-display: flex;
-align-items: center;
-padding: 0.6rem 0;
-margin: 0; /* Remove any margins */
-font-size: 0.95rem;
-color: #4b5563;
-border-bottom: 1px dashed #f3f4f6;
-width: 100%;
-box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 0;
+  font-size: 0.95rem;
+  color: #4b5563;
+  border-bottom: 1px dashed #f3f4f6;
 }
 
-/* Remove individual margins and use padding for spacing */
-.header-rank, .header-name, .header-score, .header-accuracy,
-.entry-position, .entry-name, .entry-points, .entry-accuracy {
-margin-right: 0; /* Remove margins */
-padding-right: 4px; /* Use small padding instead */
+.high-score-entry:last-child {
+  border-bottom: none;
+}
+
+/* Column Layout */
+.header-rank, .entry-position {
+  flex: 0 0 15%;
+  text-align: center;
+}
+
+.header-name, .entry-name {
+  flex: 1;
+  text-align: left;
+  padding-right: 1rem;
+  overflow-wrap: break-word;
+}
+
+.header-score, .entry-points {
+  flex: 0 0 18%;
+  text-align: center;
+}
+
+.header-accuracy, .entry-accuracy {
+  flex: 0 0 20%;
+  text-align: center;
 }
 
 .header-date, .entry-date {
-margin-right: 0;
-padding-right: 0;
+  flex: 0 0 22%;
+  text-align: center;
+}
+
+/* Modal States */
+.modal-loading,
+.modal-empty {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-style: italic;
+}
+
+.modal-loading {
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin: 1rem 0;
 }
 
 .modal-empty {
-margin-top: 0.5rem;
-font-size: 0.8rem;
-font-style: italic;
-color: #555;
+  background: #f0f9ff;
+  border: 1px dashed #bae6fd;
+  border-radius: 8px;
+  margin: 1rem 0;
 }
 
-/* Modal Footer - Updated to be sticky */
+/* Modal Footer */
 .modal-footer {
-  margin-top: auto;
-  padding: 1rem 0 0.5rem 0;
+  padding: 1rem 1.5rem 1.5rem 1.5rem;
   border-top: 1px solid #e0e7ef;
+  background: #f9fafb;
   display: flex;
   justify-content: flex-end;
-  flex-shrink: 0; /* Prevent shrinking */
-  /* Make footer sticky to bottom */
-  position: sticky;
-  bottom: 0;
-  background: #f9fafb; /* Match modal background */
-  /* Add slight shadow to show separation */
-  box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+  flex-shrink: 0;
 }
 
-.modal-empty {
-color: #666;
-text-align: center;
-padding: 1rem;
+.modal-footer .button {
+  min-height: 44px;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  transition: all 0.2s;
+}
+
+.modal-footer .button:active {
+  transform: scale(0.98);
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+  .modal {
+    padding: 10px;
+  }
+  
+  .modal-content {
+    max-width: 100%;
+    max-height: 95vh;
+    border-radius: 8px;
+  }
+  
+  .modal-header {
+    padding: 1rem;
+  }
+  
+  .modal-header h2 {
+    font-size: 1.25rem;
+  }
+  
+  .modal-body {
+    padding: 0 1rem;
+  }
+  
+  .modal-footer {
+    padding: 1rem;
+  }
+  
+  .high-scores-header,
+  .high-score-entry {
+    font-size: 0.85rem;
+    padding: 0.5rem 0;
+  }
+  
+  .header-rank, .entry-position {
+    flex: 0 0 12%;
+  }
+  
+  .header-score, .entry-points {
+    flex: 0 0 16%;
+  }
+  
+  .header-accuracy, .entry-accuracy {
+    flex: 0 0 18%;
+  }
+  
+  .header-date, .entry-date {
+    flex: 0 0 20%;
+  }
+  
+  .header-name, .entry-name {
+    padding-right: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal {
+    padding: 5px;
+  }
+  
+  .modal-content {
+    max-height: 98vh;
+    border-radius: 4px;
+  }
+  
+  .modal-header {
+    padding: 0.75rem;
+  }
+  
+  .modal-body {
+    padding: 0 0.75rem;
+  }
+  
+  .modal-footer {
+    padding: 0.75rem;
+  }
+  
+  .high-scores-header,
+  .high-score-entry {
+    font-size: 0.8rem;
+    padding: 0.4rem 0;
+  }
+  
+  .difficulty-group-header {
+    font-size: 1.1rem;
+  }
+}
+
+/* Native app specific enhancements */
+.modal.native-app .modal-close,
+.modal.native-app .modal-footer .button {
+  /* Ensure buttons work properly in native apps */
+  position: relative;
+  z-index: 1000;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Remove any conflicting mobile modal styles from the original CSS */
+.mobile-modal,
+.high-scores-modal,
+.high-scores-modal.mobile {
+  /* Reset any conflicting styles */
+  all: unset;
+}
+
+/* Ensure proper button styling in native apps */
+.modal.native-app button {
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  border: none;
+  background: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.modal.native-app .button {
+  background: #2563eb !important;
+  color: white !important;
+  border-radius: 6px !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+}
+
+.modal.native-app .button:hover,
+.modal.native-app .button:focus {
+  background: #1e40af !important;
+}
+
+.modal.native-app .button:active {
+  background: #1d4ed8 !important;
 }
 
 /* Game Over Flag Display Styles */
@@ -529,14 +695,6 @@ transform: translateX(20px);
 .toggle-label {
 font-size: 1rem;
 color: #222;
-}
-
-/* New styles for high-score-note (the note to explain what the asterisk means)*/
-.high-score-note {
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
-  font-style: italic;
-  color: #555;
 }
 
 /* Rotates emoji 45 degrees. Using this to turn a black square into a black diamond. */
@@ -731,124 +889,33 @@ margin-left: 0.5rem;
 background-color:#1e40af;
 }
 
-/* Updated Media Queries */
-@media (max-width: 700px) { 
-  .container { 
-      padding: 16px 2vw; 
-  } 
-  .flag-options { 
-      gap: 1rem; 
-  } 
-  .stat { 
-      min-width: 60px; 
-      padding: 0.5rem 0.7rem; 
-  } 
-  .flag-img { 
-      width: 60px; 
-      height: 40px; 
-  }
-  
-  /* Mobile modal adjustments */
-  .modal {
-    padding: 5px;
-    /* Use dynamic viewport height with fallback */
-    height: 100dvh;
-    height: 100vh; /* Fallback for browsers without dvh support */
-  }
-  
-  .modal-content {
-    padding: 1rem;
-    /* Use more of the available height on mobile */
-    max-height: min(95vh, 95dvh);
-    /* Ensure some margin from screen edges */
-    margin: 0;
-  }
-  
-  .modal-footer {
-    padding: 0.75rem 0 0.75rem 0; /* Increased padding for better touch targets */
-  }
-  
-  .high-scores-header, .high-score-entry {
-      font-size: 0.8rem;
-      padding: 0.4rem 0;
-  }
-  
-  /* Adjust column widths for mobile */
-  .header-rank, .entry-position {
-      flex: 0 0 12%;
-      min-width: 25px;
-  }
-  
-  .header-score, .entry-points {
-      flex: 0 0 16%;  
-      min-width: 40px;
-  }
-  
-  .header-accuracy, .entry-accuracy {
-      flex: 0 0 18%;
-      min-width: 45px;
-  }
-  
-  .header-date, .entry-date {
-      flex: 0 0 20%;
-      min-width: 55px;
-  }
-  
-  /* Optional: For better mobile touch targets */
-  .tooltip-icon {
-      width: 24px;
-      height: 24px;
-  }
+/* Capacitor-specific Game Stats Layout */
+.native-app .game-stats {
+  gap: 0.5rem !important;
+  flex-wrap: wrap !important;
+  justify-content: space-between !important;
+  padding: 0 0.5rem !important;
+  width: 100% !important;
 }
 
-@media (max-width: 500px) { 
-  .game-stats { 
-      gap: 0.7rem; 
-  } 
-  .flag-options { 
-      gap: 0.5rem; 
-  }
-  
-  .modal {
-    padding: 2px; /* Minimal padding on very small screens */
-  }
-  
-  .modal-content {
-    padding: 0.75rem;
-    max-height: min(98vh, 98dvh); /* Use almost full height */
-    border-radius: 12px; /* Smaller radius for small screens */
-  }
-  
-  .modal-footer {
-    padding: 0 0 2rem 0; /* Ensure enough bottom padding for touch */
-  }
-  
-  .high-scores-header, .high-score-entry {
-      font-size: 0.75rem;
-      padding: 0.3rem 0;
-  }
-  
-  /* Further compress for very small screens */
-  .header-name, .entry-name {
-      min-width: 60px;
-  }
-  
-  .header-score, .entry-points,
-  .header-accuracy, .entry-accuracy {
-      min-width: 35px;
-  }
-  
-  .header-date, .entry-date {
-      min-width: 45px;
-  }
+.native-app .stat {
+  flex: 1 1 calc(50% - 0.25rem) !important;
+  min-width: calc(50% - 0.25rem) !important;
+  max-width: calc(50% - 0.25rem) !important;
+  padding: 0.5rem 0.75rem !important;
+  margin-bottom: 0.5rem !important;
+  box-sizing: border-box !important;
 }
 
-/* Additional utility class for better mobile scrolling */
-@media (max-width: 700px) {
-  .modal-content {
-    /* Improve scrolling on iOS */
-    -webkit-overflow-scrolling: touch;
-    /* Ensure content can scroll properly */
-    overflow-y: auto;
-  }
+.native-app .stat-value {
+  font-size: 1.25rem !important;
+}
+
+.native-app .stat-label {
+  font-size: 0.75rem !important;
+}
+
+/* Capacitor-specific container adjustments */
+.native-app.container {
+  padding: 1rem 0.5rem !important;
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Capacitor } from '@capacitor/core';
 import GameHeader from './components/GameHeader';
 import ProgressBar from './components/ProgressBar';
 import FlagOptionsGrid from './components/FlagOptionsGrid';
@@ -40,6 +41,10 @@ const App = () => {
 
   const timerRef = useRef(null);
   const progressBarRef = useRef(null);
+
+  // Platform detection for Capacitor-specific styling
+  const isNativeApp = Capacitor.isNativePlatform();
+  const containerClass = isNativeApp ? 'container native-app' : 'container';
 
   const difficultySettings = {
     easy: { time: 45, optionCount: 4 },
@@ -404,7 +409,7 @@ const App = () => {
   const renderMainContent = () => {
     if (!gameStarted) {
       return (
-        <div className="container">
+        <div className={containerClass}>
           <header><h1>Guessy Flaggy</h1></header>
           <DifficultySelector
             difficulty={difficulty}
@@ -447,7 +452,7 @@ const App = () => {
     }
 
     return (
-      <div className="container">
+      <div className={containerClass}>
         <GameHeader
           score={score}
           timeLeft={timeLeft}

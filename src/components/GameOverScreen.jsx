@@ -1,4 +1,5 @@
 import React from 'react';
+import { Capacitor } from '@capacitor/core';
 import { getFlagImage } from './FlagOption'; // Adjust the path as necessary
 
 const GameOverScreen = ({
@@ -18,6 +19,10 @@ const GameOverScreen = ({
   onPlayerNameChange,
   onSubmit
 }) => {
+  // Platform detection for Capacitor-specific styling
+  const isNativeApp = Capacitor.isNativePlatform();
+  const containerClass = isNativeApp ? 'container native-app' : 'container';
+
   const getAccuracy = () => totalAnswers ? Math.round((correctAnswers / totalAnswers) * 100) : 0;
 
   const getDifficultyDisplayName = (difficulty) => {
@@ -55,7 +60,7 @@ const GameOverScreen = ({
   });
 
   return (
-    <div className="container">
+    <div className={containerClass}>
       <header><h1>Game Over</h1></header>
       
       {/* High Score Banner - shown for 1st place */}
