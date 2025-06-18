@@ -902,13 +902,19 @@ background-color:#1e40af;
   flex: 1 1 calc(50% - 0.25rem) !important;
   min-width: calc(50% - 0.25rem) !important;
   max-width: calc(50% - 0.25rem) !important;
-  padding: 0.5rem 0.75rem !important;
+  padding: 1rem 0.5rem !important;
   margin-bottom: 0.5rem !important;
   box-sizing: border-box !important;
+  min-height: 80px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
 }
 
 .native-app .stat-value {
-  font-size: 1.25rem !important;
+  font-size: 2.5rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 0.3rem !important;
 }
 
 .native-app .stat-label {
