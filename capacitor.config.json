@@ -2,7 +2,6 @@
   "appId": "com.flaggame.app",
   "appName": "Flag Game",
   "webDir": "dist",
-  "bundledWebRuntime": false,
   "server": {
     "androidScheme": "https",
     "cleartext": true

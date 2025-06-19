@@ -6,7 +6,7 @@ const DifficultySelector = ({
   sovereignOnly,
   onSovereignOnlyChange
 }) => {
-  const [showTooltip, setShowTooltip] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   return (
     <div className="centered-text">
@@ -35,20 +35,40 @@ const DifficultySelector = ({
         </label>
        
         <span className="toggle-label">Only Include Countries</span>
-        <span
-          className="tooltip-icon"
-          onMouseEnter={() => setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
-          onClick={() => setShowTooltip(!showTooltip)}
+        <button
+          className="info-button"
+          onClick={() => setShowInfoModal(true)}
+          type="button"
+          aria-label="Information about country filter"
         >
           ?
-          {showTooltip && (
-            <span className="tooltip-text">
-              Includes UN member & observer states. Excludes all other flags.
-            </span>
-          )}
-        </span>
+        </button>
       </div>
+
+      {/* Info Modal */}
+      {showInfoModal && (
+        <div className="info-modal-overlay" onClick={() => setShowInfoModal(false)}>
+          <div className="info-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="info-modal-body">
+              <p>
+                <strong>'Only Include Countries' mode</strong>
+              </p>
+              <p>
+                When 'Only Include Countries' is active, you'll see flags exclusively from UN Member & Observer States. We use this specific definition because 'country' can be interpreted differently. As a result, some places you might consider countries are not included, and vice-versa. Flags of states, territories, and organizations are excluded.
+              </p>
+            </div>
+            <div className="info-modal-footer">
+              <button 
+                className="button"
+                onClick={() => setShowInfoModal(false)}
+                type="button"
+              >
+                Got it
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

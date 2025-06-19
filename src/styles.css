@@ -150,30 +150,42 @@ h1 {
 }
 
 /* Button Styles */
-.button { 
-  background: #2563eb; 
-  color: #fff; 
-  border: none; 
-  padding: 0.8rem 1.5rem; 
-  font-size: 1rem; 
-  border-radius: 6px; 
-  cursor: pointer; 
-  transition: background 0.18s; 
-  font-weight: 600; 
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04); 
-margin-bottom: 0.5rem; /* Margins for the button */
-margin-top: 1.5rem;
-margin-right: 0.5rem;
-margin-left: 0.5rem;
+.button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  margin: 8px;
+  min-width: 120px;
 }
-.button:hover { 
-  background: #1e40af; 
+
+.button:hover {
+  background: #1d4ed8;
 }
-.button.success { 
-  background: #22c55e; 
+
+.button:active {
+  background: #1e40af;
 }
-.button.success:hover { 
-  background: #16a34a; 
+
+.button.success {
+  background: #059669;
+}
+
+.button.success:hover {
+  background: #047857;
+}
+
+.button.secondary {
+  background: #6b7280;
+}
+
+.button.secondary:hover {
+  background: #4b5563;
 }
 
 /* Difficulty Buttons Styles */
@@ -818,7 +830,7 @@ animation: subtleTextPop 0.8s ease-in-out infinite alternate;
 }
 }
 
-/*Styling for the tooltop ? icon and text shown next to the difficulty buttons*/
+/*Styling for the tooltip ? icon and text shown next to the difficulty buttons*/
 .tooltip-icon {
 display: inline-flex;
 justify-content: center;
@@ -838,18 +850,45 @@ vertical-align: super;
 
 .tooltip-text {
 position: absolute;
-left: 100%;
+left: 50%;
 top: 50%;
-transform: translateY(-50%);
+transform: translate(-50%, -50%);
 background: #333;
 color: #fff;
-padding: 8px;
-border-radius: 4px;
+padding: 12px;
+border-radius: 8px;
 font-size: 14px;
 min-width: 200px;
-z-index: 10;
-margin-left: 8px;
-white-space: nowrap;
+max-width: 300px;
+z-index: 1000;
+white-space: normal;
+word-wrap: break-word;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+border: 1px solid #555;
+}
+
+/* Mobile responsive tooltip adjustments */
+@media (max-width: 768px) {
+  .tooltip-text {
+    position: fixed;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 90vw;
+    max-width: 350px;
+    min-width: auto;
+    font-size: 16px;
+    padding: 16px;
+    border-radius: 12px;
+    z-index: 10000;
+  }
+  
+  .tooltip-icon {
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    line-height: 20px;
+  }
 }
 
 .player-name-form {
@@ -924,4 +963,351 @@ background-color:#1e40af;
 /* Capacitor-specific container adjustments */
 .native-app.container {
   padding: 1rem 0.5rem !important;
+}
+
+/* Info Button (replaces tooltip icon) */
+.info-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: #ddd;
+  color: #333;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+  line-height: 20px;
+  margin-left: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: bold;
+}
+
+.info-button:hover {
+  background: #bbb;
+  transform: scale(1.1);
+}
+
+.info-button:active {
+  transform: scale(0.95);
+}
+
+/* Info Modal Styles */
+.info-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.info-modal-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: modal-fade-in 0.3s ease-out;
+}
+
+.info-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.info-modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #1e293b;
+}
+
+.info-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #64748b;
+  padding: 4px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.info-modal-close:hover {
+  background: #e0e7ef;
+  color: #1e293b;
+}
+
+.info-modal-body {
+  padding: 1.5rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.info-modal-body p {
+  margin: 0 0 1rem 0;
+  line-height: 1.6;
+  color: #374151;
+}
+
+.info-modal-body p:last-child {
+  margin-bottom: 0;
+}
+
+.info-modal-footer {
+  padding: 1rem 1.5rem 1.5rem 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .info-modal-overlay {
+    padding: 10px;
+  }
+  
+  .info-modal-content {
+    max-width: 100%;
+    max-height: 95vh;
+  }
+  
+  .info-modal-header {
+    padding: 1rem;
+  }
+  
+  .info-modal-header h3 {
+    font-size: 1.1rem;
+  }
+  
+  .info-modal-body {
+    padding: 1rem;
+  }
+  
+  .info-modal-footer {
+    padding: 1rem;
+  }
+  
+  .info-button {
+    width: 24px;
+    height: 24px;
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
+
+/* Privacy Policy Modal Styles */
+.privacy-policy-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.privacy-policy-content {
+  background: white;
+  border-radius: 12px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.privacy-policy-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10;
+}
+
+.privacy-policy-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #1f2937;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.2s;
+}
+
+.close-button:hover {
+  color: #374151;
+}
+
+.privacy-policy-body {
+  padding: 24px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.privacy-policy-body h3 {
+  color: #1f2937;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  font-size: 1.25rem;
+}
+
+.privacy-policy-body h4 {
+  color: #374151;
+  margin-top: 20px;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+
+.privacy-policy-body h5 {
+  color: #4b5563;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.privacy-policy-body p {
+  margin-bottom: 12px;
+  line-height: 1.6;
+  color: #4b5563;
+}
+
+.privacy-policy-body ul {
+  margin-bottom: 16px;
+  padding-left: 20px;
+}
+
+.privacy-policy-body li {
+  margin-bottom: 6px;
+  line-height: 1.5;
+  color: #4b5563;
+}
+
+.privacy-policy-body a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.privacy-policy-body a:hover {
+  text-decoration: underline;
+}
+
+.privacy-policy-footer {
+  padding: 16px 24px 24px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Native app adjustments */
+.native-app .privacy-policy-content {
+  margin: 20px;
+  max-height: calc(100vh - 40px);
+}
+
+.native-app .privacy-policy-overlay {
+  padding: 0;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .privacy-policy-overlay {
+    padding: 10px;
+  }
+  
+  .privacy-policy-content {
+    max-height: 95vh;
+  }
+  
+  .privacy-policy-header {
+    padding: 16px 20px 12px;
+  }
+  
+  .privacy-policy-header h2 {
+    font-size: 1.25rem;
+  }
+  
+  .privacy-policy-body {
+    padding: 20px;
+  }
+  
+  .privacy-policy-footer {
+    padding: 12px 20px 20px;
+  }
+}
+
+/* Privacy Policy Button - Small and Subtle */
+.privacy-policy-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #f3f4f6;
+  color: #000;
+  border: 1px solid #d1d5db;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: normal;
+  transition: background-color 0.2s;
+  z-index: 100;
+  min-width: auto;
+  margin: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.privacy-policy-button:hover {
+  background: #e5e7eb;
+}
+
+/* Native app adjustments for privacy policy button */
+.native-app .privacy-policy-button {
+  bottom: 30px;
+  right: 30px;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .privacy-policy-button {
+    bottom: 15px;
+    right: 15px;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
 }

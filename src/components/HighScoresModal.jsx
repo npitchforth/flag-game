@@ -73,23 +73,6 @@ const HighScoresModal = ({ isOpen, onClose, highScores, loading }) => {
           </button>
         </div>
 
-        {/* Debug info - only show in development */}
-        {process.env.NODE_ENV === 'development' && (
-          <div style={{ 
-            backgroundColor: 'yellow', 
-            padding: '10px', 
-            marginBottom: '10px', 
-            fontSize: '12px',
-            borderRadius: '4px'
-          }}>
-            <div>Loading: {loading ? 'true' : 'false'}</div>
-            <div>High scores count: {safeHighScores.length}</div>
-            <div>Difficulty groups: {scoresByDifficulty.length}</div>
-            <div>Platform: {Capacitor.getPlatform()}</div>
-            <div>Is Native: {isNativeApp ? 'true' : 'false'}</div>
-          </div>
-        )}
-
         {/* Note */}
         <div className="high-score-note">
           <p>
