@@ -32,4 +32,29 @@ yarn-error.log*
 
 # Local files
 *.log
-*.local 
+*.local
+
+# Android specific
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+android/.idea/
+
+# Prevent duplicate folders (common patterns)
+* 2/
+* 2.*
+*_backup/
+*_old/
+*_copy/
+*_duplicate/
+
+# Capacitor generated files (should be regenerated)
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+
+# Temporary files
+*.tmp
+*.temp
+*~ 
