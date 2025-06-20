@@ -10,7 +10,10 @@
     "ionic:build": "npm run build",
     "ionic:serve": "npm run dev",
     "cap:sync": "npx cap sync",
+    "cap:sync:clean": "rm -rf android && npx cap add android && npx cap sync",
     "cap:open:android": "npx cap open android",
+    "cap:build:android": "npm run build && npx cap sync && cd android && ./gradlew assembleDebug",
+    "dev:safe": "./scripts/dev-workflow.sh",
     "start:clean": "lsof -ti:3000 | xargs kill -9 || true; sleep 1; lsof -ti:3000 || true; npm run dev -- --port 3000"
   },
   "dependencies": {

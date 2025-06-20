@@ -1312,11 +1312,6 @@ background-color:#1e40af;
   }
 }
 
-/* Native app safe area handling for headers 
-.native-app header {
-  padding-top: env(safe-area-inset-top, 20px);
-}*/
-
 /* Alternative: use margin instead of padding */
 .native-app header h1 {
   margin-top: env(safe-area-inset-top, 20px);
@@ -1344,4 +1339,113 @@ background-color:#1e40af;
 /* Safe area for the main container in native apps */
 .native-app.container {
   padding-top: env(safe-area-inset-top, 20px);
+}
+
+/* New Mobile Layout for Game Stats */
+.game-stats.mobile-layout {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1rem !important;
+  width: 100% !important;
+}
+
+.game-stats.mobile-layout .timer-stat {
+  flex: 1 1 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  order: 1 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+/* Create a flex container for Score and Streak */
+.game-stats.mobile-layout .score-stat,
+.game-stats.mobile-layout .streak-stat {
+  flex: 1 1 calc(50% - 0.5rem) !important;
+  min-width: calc(50% - 0.5rem) !important;
+  max-width: calc(50% - 0.5rem) !important;
+  order: 2 !important;
+}
+
+/* Add a wrapper for the bottom row */
+.game-stats.mobile-layout::after {
+  content: '';
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  order: 2;
+}
+
+/* Ensure Score and Streak are in the same row */
+.game-stats.mobile-layout .score-stat,
+.game-stats.mobile-layout .streak-stat {
+  display: inline-block !important;
+  vertical-align: top !important;
+}
+
+/* Desktop layout - keep original horizontal layout */
+.game-stats:not(.mobile-layout) {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.game-stats:not(.mobile-layout) .stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  padding: 0.7rem 1.2rem;
+  min-width: 80px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Mobile layout specific styling */
+.game-stats.mobile-layout {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1rem !important;
+  width: 100% !important;
+}
+
+.game-stats.mobile-layout .timer-stat {
+  width: 100% !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.game-stats.mobile-layout .score-stat,
+.game-stats.mobile-layout .streak-stat {
+  width: calc(50% - 0.5rem) !important;
+  display: inline-block !important;
+  vertical-align: top !important;
+}
+
+/* Create a flex row for Score and Streak */
+.game-stats.mobile-layout .score-stat {
+  float: left !important;
+}
+
+.game-stats.mobile-layout .streak-stat {
+  float: right !important;
+}
+
+/* Bottom row for mobile layout */
+.game-stats.mobile-layout .bottom-row {
+  display: flex !important;
+  gap: 1rem !important;
+  width: 100% !important;
+}
+
+.game-stats.mobile-layout .bottom-row .stat {
+  flex: 1 !important;
+  width: auto !important;
+  float: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
 }
