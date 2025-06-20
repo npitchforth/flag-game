@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Capacitor } from '@capacitor/core';
 import GameHeader from './components/GameHeader';
 import ProgressBar from './components/ProgressBar';
 import FlagOptionsGrid from './components/FlagOptionsGrid';
 import DifficultySelector from './components/DifficultySelector';
 import GameOverScreen from './components/GameOverScreen';
 import HighScoresModal from './components/HighScoresModal';
+import PrivacyPolicy from './components/PrivacyPolicy';
 import { addHighScore, getHighScores } from './config/supabase'; 
 import { supabase } from './config/supabase';
+import { difficultySettings } from './config/difficultySettings';
 
 const App = () => {
   const [difficulty, setDifficulty] = useState('medium');
@@ -26,6 +29,7 @@ const App = () => {
   const [optionCount, setOptionCount] = useState(4);
   const [highScores, setHighScores] = useState([]);
   const [showHighScores, setShowHighScores] = useState(false);
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
   const [correctGuesses, setCorrectGuesses] = useState([]);
   const [incorrectGuesses, setIncorrectGuesses] = useState([]);
@@ -41,132 +45,130 @@ const App = () => {
   const timerRef = useRef(null);
   const progressBarRef = useRef(null);
 
-  const difficultySettings = {
-    easy: { time: 45, optionCount: 4 },
-    medium: { time: 45, optionCount: 4 },
-    hard: { time:45, optionCount: 4 }
+  // Platform detection for Capacitor-specific styling
+  const isNativeApp = Capacitor.isNativePlatform();
+  const containerClass = isNativeApp ? 'container native-app' : 'container';
+
+  // Load high scores from Supabase on component mount
+  useEffect(() => {
+    loadHighScores();
+  }, []);
+
+  const loadHighScores = async () => {
+    setLoadingHighScores(true);
+    console.log('Loading high scores from Supabase...');
+    try {
+      const scores = await getHighScores();
+      console.log('📊 Loaded high scores from Supabase:', scores);
+      setHighScores(scores);
+    } catch (error) {
+      console.error('Failed to load high scores:', error);
+      // Fallback to local storage if Supabase fails
+      try {
+        const localScores = JSON.parse(localStorage.getItem('flagGameHighScores')) || [];
+        console.log('📊 Fallback to local scores:', localScores);
+        setHighScores(localScores);
+      } catch {
+        setHighScores([]);
+      }
+    } finally {
+      setLoadingHighScores(false);
+    }
   };
 
-    // Load high scores from Supabase on component mount
-    useEffect(() => {
-      loadHighScores();
-    }, []);
-  
-    const loadHighScores = async () => {
-      setLoadingHighScores(true);
-      console.log('Loading high scores from Supabase...');
-      try {
-        const scores = await getHighScores();
-        console.log('📊 Loaded high scores from Supabase:', scores);
-        setHighScores(scores);
-      } catch (error) {
-        console.error('Failed to load high scores:', error);
-        // Fallback to local storage if Supabase fails
-        try {
-          const localScores = JSON.parse(localStorage.getItem('flagGameHighScores')) || [];
-          console.log('📊 Fallback to local scores:', localScores);
-          setHighScores(localScores);
-        } catch {
-          setHighScores([]);
-        }
-      } finally {
-        setLoadingHighScores(false);
-      }
-    };
-  
-    const sortScores = (scores) => {
-      return scores.sort((a, b) => {
-        if (b.score !== a.score) return b.score - a.score;
-        if (b.accuracy !== a.accuracy) return b.accuracy - a.accuracy;
-        if (a.sovereignOnly !== b.sovereignOnly) return (a.sovereignOnly === false ? -1 : 1);
-        return new Date(a.date) - new Date(b.date);
-      });
-    };
-  
-    const isTopScoreForDifficulty = (newScore, existingScores, difficulty) => {
-      console.log('🏆 Checking if top score for difficulty:', difficulty);
-      console.log('🏆 New score:', newScore);
-      
-      // Filter existing scores by difficulty
-      const difficultyScores = existingScores.filter(score => score.difficulty === difficulty);
-      console.log('🏆 Existing scores for', difficulty, ':', difficultyScores);
-      
-      if (difficultyScores.length === 0) {
-        console.log('🏆 No existing scores for this difficulty - this is the top score!');
-        return true;
-      }
-      
-      // Get the current top score for this difficulty
-      const sortedExisting = sortScores([...difficultyScores]);
-      const currentTopScore = sortedExisting[0];
-      console.log('🏆 Current top score for', difficulty, ':', currentTopScore);
-      
-      // Compare new score with current top score using the same logic as sorting
-      let isNewTop = false;
-      
-      if (newScore.score > currentTopScore.score) {
-        isNewTop = true;
-      } else if (newScore.score === currentTopScore.score) {
-        if (newScore.accuracy > currentTopScore.accuracy) {
-          isNewTop = true;
-        } else if (newScore.accuracy === currentTopScore.accuracy) {
-          // Check sovereign preference (non-sovereign is better)
-          if (newScore.sovereignOnly === false && currentTopScore.sovereignOnly === true) {
-            isNewTop = true;
-          } else if (newScore.sovereignOnly === currentTopScore.sovereignOnly) {
-            // If all else equal, newer date wins (this should rarely happen)
-            isNewTop = new Date(newScore.date) >= new Date(currentTopScore.date);
-          }
-        }
-      }
-      
-      console.log('🏆 Is new top score for', difficulty, '?', isNewTop);
-      return isNewTop;
-    };
+  const sortScores = (scores) => {
+    return scores.sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      if (b.accuracy !== a.accuracy) return b.accuracy - a.accuracy;
+      if (a.sovereignOnly !== b.sovereignOnly) return (a.sovereignOnly === false ? -1 : 1);
+      return new Date(a.date) - new Date(b.date);
+    });
+  };
 
-    // New function to check leaderboard position (2nd, 3rd, 4th)
-    const checkLeaderboardPosition = (newScore, existingScores, difficulty) => {
-      console.log('🏅 Checking leaderboard position for difficulty:', difficulty);
-      
-      // Filter existing scores by difficulty
-      const difficultyScores = existingScores.filter(score => score.difficulty === difficulty);
-      console.log('🏅 Existing scores for', difficulty, ':', difficultyScores);
-      
-      // Add the new score to the list and sort
-      const allScores = [...difficultyScores, newScore];
-      const sortedScores = sortScores(allScores);
-      
-      console.log('🏅 All scores sorted:', sortedScores);
-      
-      // Find the position of the new score
-      const newScoreIndex = sortedScores.findIndex(score => 
-        score.score === newScore.score &&
-        score.accuracy === newScore.accuracy &&
-        score.sovereignOnly === newScore.sovereignOnly &&
-        score.date === newScore.date
-      );
-      
-      const position = newScoreIndex + 1; // Convert to 1-based position
-      console.log('🏅 New score position:', position);
-      
-      // Return position if it's 2nd, 3rd, or 4th place
-      if (position >= 2 && position <= 4) {
-        return position;
+  const isTopScoreForDifficulty = (newScore, existingScores, difficulty) => {
+    console.log('🏆 Checking if top score for difficulty:', difficulty);
+    console.log('🏆 New score:', newScore);
+    
+    // Filter existing scores by difficulty
+    const difficultyScores = existingScores.filter(score => score.difficulty === difficulty);
+    console.log('🏆 Existing scores for', difficulty, ':', difficultyScores);
+    
+    if (difficultyScores.length === 0) {
+      console.log('🏆 No existing scores for this difficulty - this is the top score!');
+      return true;
+    }
+    
+    // Get the current top score for this difficulty
+    const sortedExisting = sortScores([...difficultyScores]);
+    const currentTopScore = sortedExisting[0];
+    console.log('🏆 Current top score for', difficulty, ':', currentTopScore);
+    
+    // Compare new score with current top score using the same logic as sorting
+    let isNewTop = false;
+    
+    if (newScore.score > currentTopScore.score) {
+      isNewTop = true;
+    } else if (newScore.score === currentTopScore.score) {
+      if (newScore.accuracy > currentTopScore.accuracy) {
+        isNewTop = true;
+      } else if (newScore.accuracy === currentTopScore.accuracy) {
+        // Check sovereign preference (non-sovereign is better)
+        if (newScore.sovereignOnly === false && currentTopScore.sovereignOnly === true) {
+          isNewTop = true;
+        } else if (newScore.sovereignOnly === currentTopScore.sovereignOnly) {
+          // If all else equal, newer date wins (this should rarely happen)
+          isNewTop = new Date(newScore.date) >= new Date(currentTopScore.date);
+        }
       }
-      
-      return null;
-    };
-  
-    useEffect(() => () => clearInterval(timerRef.current), []);
-    useEffect(() => {
-      if (timeLeft === 0) endGame();
-    }, [timeLeft]);
-    useEffect(() => {
-      if (difficulty) {
-        setTimeLeft(difficultySettings[difficulty].time);
-        setOptionCount(difficultySettings[difficulty].optionCount);
-      }
-    }, [difficulty]);
+    }
+    
+    console.log('🏆 Is new top score for', difficulty, '?', isNewTop);
+    return isNewTop;
+  };
+
+  // New function to check leaderboard position (2nd, 3rd, 4th)
+  const checkLeaderboardPosition = (newScore, existingScores, difficulty) => {
+    console.log('🏅 Checking leaderboard position for difficulty:', difficulty);
+    
+    // Filter existing scores by difficulty
+    const difficultyScores = existingScores.filter(score => score.difficulty === difficulty);
+    console.log('🏅 Existing scores for', difficulty, ':', difficultyScores);
+    
+    // Add the new score to the list and sort
+    const allScores = [...difficultyScores, newScore];
+    const sortedScores = sortScores(allScores);
+    
+    console.log('🏅 All scores sorted:', sortedScores);
+    
+    // Find the position of the new score
+    const newScoreIndex = sortedScores.findIndex(score => 
+      score.score === newScore.score &&
+      score.accuracy === newScore.accuracy &&
+      score.sovereignOnly === newScore.sovereignOnly &&
+      score.date === newScore.date
+    );
+    
+    const position = newScoreIndex + 1; // Convert to 1-based position
+    console.log('🏅 New score position:', position);
+    
+    // Return position if it's 2nd, 3rd, or 4th place
+    if (position >= 2 && position <= 4) {
+      return position;
+    }
+    
+    return null;
+  };
+
+  useEffect(() => () => clearInterval(timerRef.current), []);
+  useEffect(() => {
+    if (timeLeft === 0) endGame();
+  }, [timeLeft]);
+  useEffect(() => {
+    if (difficulty) {
+      setTimeLeft(difficultySettings[difficulty].time);
+      setOptionCount(difficultySettings[difficulty].optionCount);
+    }
+  }, [difficulty]);
 
   const startNewGame = () => {
     if (!window.countries || window.countries.length === 0) {
@@ -275,7 +277,7 @@ const App = () => {
 
   const generateQuestion = (used = usedCountries) => {
     console.log('All countries:', window.countries.map(country => country.code));  // Log all country codes to be considered prior to filtering
-  console.log('Used countries:', used);     // Log the used countries
+    console.log('Used countries:', used);     // Log the used countries
     let pool = window.countries.filter(c => 
       difficulty === 'easy' ? c.difficulty === 'easy' :
       difficulty === 'medium' ? c.difficulty === 'medium' :
@@ -404,7 +406,7 @@ const App = () => {
   const renderMainContent = () => {
     if (!gameStarted) {
       return (
-        <div className="container">
+        <div className={containerClass}>
           <header><h1>Guessy Flaggy</h1></header>
           <DifficultySelector
             difficulty={difficulty}
@@ -447,7 +449,7 @@ const App = () => {
     }
 
     return (
-      <div className="container">
+      <div className={containerClass}>
         <GameHeader
           score={score}
           timeLeft={timeLeft}
@@ -478,11 +480,21 @@ const App = () => {
   return (
     <>
       {renderMainContent()}
+      <button 
+        className="privacy-policy-button"
+        onClick={() => setShowPrivacyPolicy(true)}
+      >
+        Privacy Policy
+      </button>
       <HighScoresModal
         isOpen={showHighScores}
         onClose={() => setShowHighScores(false)}
         highScores={highScores}
         loading={loadingHighScores}
+      />
+      <PrivacyPolicy
+        isOpen={showPrivacyPolicy}
+        onClose={() => setShowPrivacyPolicy(false)}
       />
     </>
   );
