@@ -10,6 +10,7 @@
     }
   ],
   "routes": [
+    { "src": "/privacy-policy", "dest": "/privacy-policy.html" },
     { "src": "/flags/(.*)", "dest": "https://flagcdn.com/$1" },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
