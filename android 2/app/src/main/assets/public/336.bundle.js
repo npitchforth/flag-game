@@ -1,0 +1,3 @@
+/*! For license information please see 336.bundle.js.LICENSE.txt */
+"use strict";(self.webpackChunkflag_game=self.webpackChunkflag_game||[]).push([[336],{8336:(e,t,n)=>{n.r(t),n.d(t,{startStatusTap:()=>o});var s=n(3549),r=n(4534),a=n(9185);const o=()=>{const e=window;e.addEventListener("statusTap",(()=>{(0,s.gv)((()=>{const t=e.innerWidth,n=e.innerHeight,o=document.elementFromPoint(t/2,n/2);if(!o)return;const i=(0,r.a)(o);i&&new Promise((e=>(0,a.c)(i,e))).then((()=>{(0,s.bN)((async()=>{i.style.setProperty("--overflow","hidden"),await(0,r.s)(i,300),i.style.removeProperty("--overflow")}))}))}))}))}}}]);
+//# sourceMappingURL=336.bundle.js.map

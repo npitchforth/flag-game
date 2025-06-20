@@ -1311,3 +1311,37 @@ background-color:#1e40af;
     font-size: 11px;
   }
 }
+
+/* Native app safe area handling for headers 
+.native-app header {
+  padding-top: env(safe-area-inset-top, 20px);
+}*/
+
+/* Alternative: use margin instead of padding */
+.native-app header h1 {
+  margin-top: env(safe-area-inset-top, 20px);
+}
+
+/* More specific spacing with safe area support */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .native-app header {
+    padding-top: calc(env(safe-area-inset-top) + 20px);
+  }
+}
+
+/* Fallback for devices without safe-area support */
+@supports not (padding-top: env(safe-area-inset-top)) {
+  .native-app header {
+    padding-top: 60px;
+  }
+}
+
+/* Additional safe area handling for game over screen */
+.native-app .game-over-container {
+  padding-top: env(safe-area-inset-top, 40px);
+}
+
+/* Safe area for the main container in native apps */
+.native-app.container {
+  padding-top: env(safe-area-inset-top, 20px);
+}

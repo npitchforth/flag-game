@@ -60,7 +60,7 @@ const GameOverScreen = ({
   });
 
   return (
-    <div className={containerClass}>
+    <div className={`${containerClass} game-over-container`}>
       <header><h1>Game Over</h1></header>
       
       {/* High Score Banner - shown for 1st place */}

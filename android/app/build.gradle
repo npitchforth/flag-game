@@ -2,7 +2,13 @@ apply plugin: 'com.android.application'
 
 android {
     namespace "com.flaggame.app"
-    compileSdk rootProject.ext.compileSdkVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    
     defaultConfig {
         applicationId "com.flaggame.app"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -24,22 +30,9 @@ android {
     }
 }
 
-configurations.all {
-    resolutionStrategy {
-        force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
-        force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22'
-        force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22'
-        force 'org.jetbrains.kotlin:kotlin-stdlib-common:1.8.22'
-        force 'org.jetbrains.kotlin:kotlin-stdlib-jvm:1.8.22'
-    }
-}
-
 repositories {
-    google()
-    mavenCentral()
-    // Only use flatDir for Capacitor plugins that require it
     flatDir{
-        dirs '../capacitor-cordova-android-plugins/src/main/libs'
+        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
     }
 }
 
