@@ -278,7 +278,7 @@ window.countries = [
    { code: 'us-ny', name: 'New York', difficulty: 'hard', entity: 'state', flagSource: 'flagcdn' },
    { code: 'us-oh', name: 'Ohio', difficulty: 'hard', entity: 'state', flagSource: 'flagcdn' },
    { code: 'us-ok', name: 'Oklahoma', difficulty: 'hard', entity: 'state', flagSource: 'flagcdn' },
-   { code: 'us-or', name: 'Oregon', difficulty: 'hard', entity: 'state', flagSource: 'flagcdn' },
+   { code: 'us-or', name: 'Oregon', difficulty: 'easy', entity: 'state', flagSource: 'flagcdn' },
    { code: 'us-pa', name: 'Pennsylvania', difficulty: 'hard', entity: 'state', flagSource: 'flagcdn' },
    { code: 'us-ri', name: 'Rhode Island', difficulty: 'hard', entity: 'state', flagSource: 'flagcdn' },
    { code: 'us-sc', name: 'South Carolina', difficulty: 'hard', entity: 'state', flagSource: 'flagcdn' },

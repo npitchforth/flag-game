@@ -1,15 +1,49 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
+import { getDeviceId } from '../services/deviceId';
 import '../styles.css';
 
 const HighScoresModal = ({ isOpen, onClose, highScores, loading }) => {
+  const [activeTab, setActiveTab] = useState('my'); // 'all' or 'my' - default to 'my'
+  const [deviceId, setDeviceId] = useState(null);
+  const [filteredScores, setFilteredScores] = useState([]);
+
   // Add debugging with specific tags
   console.log('[FLAG_GAME] HighScoresModal props:', { isOpen, highScores, loading });
   
+  // Load device ID when component mounts
+  useEffect(() => {
+    if (isOpen) {
+      getDeviceId().then(id => {
+        setDeviceId(id);
+        console.log('[FLAG_GAME] Device ID loaded:', id);
+      });
+    }
+  }, [isOpen]);
+
+  // Filter scores based on active tab
+  useEffect(() => {
+    if (!highScores || !Array.isArray(highScores)) {
+      setFilteredScores([]);
+      return;
+    }
+
+    if (activeTab === 'my' && deviceId) {
+      // Filter to only show scores from this device
+      const myScores = highScores.filter(score => score.deviceId === deviceId);
+      setFilteredScores(myScores);
+      console.log('[FLAG_GAME] My scores filtered:', myScores.length, 'scores');
+    } else {
+      // Show all scores
+      setFilteredScores(highScores);
+      console.log('[FLAG_GAME] All scores:', highScores.length, 'scores');
+    }
+  }, [highScores, activeTab, deviceId]);
+  
   if (!isOpen) return null;
 
-  // Ensure highScores is an array
-  const safeHighScores = Array.isArray(highScores) ? highScores : [];
+  // Ensure filteredScores is an array
+  const safeHighScores = Array.isArray(filteredScores) ? filteredScores : [];
   console.log('[FLAG_GAME] Safe high scores:', safeHighScores);
 
   const difficulties = ['easy', 'medium', 'hard'];
@@ -73,8 +107,31 @@ const HighScoresModal = ({ isOpen, onClose, highScores, loading }) => {
           </button>
         </div>
 
-        {/* Note */}
+        {/* Tabs */}
+        <div className="high-scores-tabs">
+          <button
+            className={`tab-button ${activeTab === 'my' ? 'active' : ''}`}
+            onClick={() => setActiveTab('my')}
+            type="button"
+          >
+            My High Scores
+          </button>
+          <button
+            className={`tab-button ${activeTab === 'all' ? 'active' : ''}`}
+            onClick={() => setActiveTab('all')}
+            type="button"
+          >
+            All Time High Scores
+          </button>
+        </div>
+
+        {/* Note Section */}
         <div className="high-score-note">
+          {activeTab === 'my' && (
+            <p>
+              Table displays highest scores achieved during this session or with this mobile device.
+            </p>
+          )}
           <p>
             An asterisk (*) indicates that the score was attained while playing with country flags only.
           </p>
@@ -87,7 +144,7 @@ const HighScoresModal = ({ isOpen, onClose, highScores, loading }) => {
           ) : safeHighScores.length === 0 ? (
             <div className="modal-empty">No high scores yet. Play a game to see your scores!</div>
           ) : (
-            <div className="high-scores-container">
+            <div className={`high-scores-container ${activeTab === 'my' ? 'my-scores' : ''}`}>
               {scoresByDifficulty.map(group => {
                 console.log('[FLAG_GAME] Rendering group:', group.level, 'with', group.scores.length, 'scores');
                 if (group.scores.length > 0) {
@@ -100,7 +157,7 @@ const HighScoresModal = ({ isOpen, onClose, highScores, loading }) => {
                       {/* Header row */}
                       <div className="high-scores-header">
                         <span className="header-rank">Rank</span>
-                        <span className="header-name">Name</span>
+                        {activeTab === 'all' && <span className="header-name">Name</span>}
                         <span className="header-score">Score</span>
                         <span className="header-accuracy">Accuracy</span>
                         <span className="header-date">Date</span>
@@ -111,7 +168,7 @@ const HighScoresModal = ({ isOpen, onClose, highScores, loading }) => {
                         {group.scores.map((score, index) => (
                           <li key={index} className="high-score-entry">
                             <span className="entry-position">{index + 1}.</span>
-                            <span className="entry-name">{score.playerName || 'Anonymous'}</span>
+                            {activeTab === 'all' && <span className="entry-name">{score.playerName || 'Anonymous'}</span>}
                             <span className="entry-points">
                               {score.score}{score.sovereignOnly ? <sup>*</sup> : null}
                             </span>

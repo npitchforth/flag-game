@@ -7,7 +7,7 @@ import DifficultySelector from './components/DifficultySelector';
 import GameOverScreen from './components/GameOverScreen';
 import HighScoresModal from './components/HighScoresModal';
 import PrivacyPolicy from './components/PrivacyPolicy';
-import { addHighScore, getHighScores } from './config/supabase'; 
+import { addHighScore, getHighScores } from './config/supabase';
 import { supabase } from './config/supabase';
 import { difficultySettings } from './config/difficultySettings';
 

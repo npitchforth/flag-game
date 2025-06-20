@@ -1,9 +1,14 @@
 import { supabase } from '../config/supabase';
+import { getDeviceId } from './deviceId';
 
 export const highScoresService = {
   // Add a new high score
   async addHighScore(scoreData) {
     try {
+      // Get the device ID
+      const deviceId = await getDeviceId();
+      console.log('[HIGH_SCORES] Adding high score with device ID:', deviceId);
+      
       const { data, error } = await supabase
         .from('high_scores')
         .insert([{
@@ -12,7 +17,8 @@ export const highScoresService = {
           difficulty: scoreData.difficulty,
           accuracy: scoreData.accuracy,
           sovereign_only: scoreData.sovereignOnly,
-          streak: scoreData.streak
+          streak: scoreData.streak,
+          device_id: deviceId // Add device ID to the score
         }])
         .select();
 
@@ -89,6 +95,40 @@ export const highScoresService = {
       return data[0] || null;
     } catch (error) {
       console.error('Error fetching personal best:', error);
+      throw error;
+    }
+  },
+
+  // Get scores for a specific device
+  async getDeviceScores(deviceId = null) {
+    try {
+      // If no device ID provided, get the current device ID
+      const currentDeviceId = deviceId || await getDeviceId();
+      console.log('[HIGH_SCORES] Getting scores for device ID:', currentDeviceId);
+      
+      const { data, error } = await supabase
+        .from('high_scores')
+        .select('*')
+        .eq('device_id', currentDeviceId)
+        .order('score', { ascending: false })
+        .order('accuracy', { ascending: false })
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+      
+      // Transform the data to match the expected format
+      return data.map(score => ({
+        playerName: score.player_name,
+        score: score.score,
+        date: score.created_at,
+        difficulty: score.difficulty,
+        accuracy: score.accuracy,
+        sovereignOnly: score.sovereign_only,
+        streak: score.streak,
+        deviceId: score.device_id
+      }));
+    } catch (error) {
+      console.error('Error fetching device scores:', error);
       throw error;
     }
   }

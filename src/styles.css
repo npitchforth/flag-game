@@ -1396,3 +1396,86 @@ background-color:#1e40af;
   min-width: 80px;
   border: 1px solid #e5e7eb;
 }
+
+/* High Scores Tabs */
+.high-scores-tabs {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+  padding: 0;
+  margin: 0;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #6b7280;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.tab-button:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.tab-button.active {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+  background: #eff6ff;
+}
+
+.tab-button.active:hover {
+  background: #dbeafe;
+}
+
+/* Mobile responsive tabs */
+@media (max-width: 768px) {
+  .tab-button {
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Native app adjustments for tabs */
+.native-app .high-scores-tabs {
+  border-bottom: 1px solid #d1d5db;
+}
+
+.native-app .tab-button {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Center tables in My High Scores tab - NEW, SIMPLER APPROACH */
+.high-scores-container.my-scores .high-scores-header,
+.high-scores-container.my-scores .high-scores-list {
+  /* Set a max-width appropriate for the content without the 'Name' column */
+  max-width: 400px;
+  /* Center the block horizontally */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Ensure the header text itself remains left-aligned inside the centered block */
+.high-scores-container.my-scores .difficulty-group-header {
+  text-align: left;
+}
+
+/* Keep the flex layout for columns inside the header and rows */
+.high-scores-header, .high-score-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
