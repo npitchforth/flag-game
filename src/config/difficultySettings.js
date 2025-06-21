@@ -3,26 +3,24 @@
 
 export const difficultySettings = {
   easy: { 
-    time: 12, 
-    optionCount: 4 
+    time: 45, 
+    optionCount: 4,
+    streakThreshold: 5, // Answers needed for a streak bonus
+    streakTimeBonus: 3,   // Seconds to add for a bonus
+    maxStreakBonuses: 3, // Max number of times bonus can be awarded
   },
   medium: { 
-    time: 12, 
-    optionCount: 4 
+    time: 45, 
+    optionCount: 4,
+    streakThreshold: 5,
+    streakTimeBonus: 3,
+    maxStreakBonuses: 3,
   },
   hard: { 
-    time: 12, 
-    optionCount: 4 
+    time: 45, 
+    optionCount: 4,
+    streakThreshold: 5,
+    streakTimeBonus: 5,
+    maxStreakBonuses: 3,
   }
 };
-
-// You can easily adjust these values for testing:
-// - time: Game duration in seconds
-// - optionCount: Number of flag options to choose from
-
-// Example adjustments for testing:
-// export const difficultySettings = {
-//   easy: { time: 30, optionCount: 3 },    // Shorter time, fewer options
-//   medium: { time: 60, optionCount: 4 },  // Longer time, standard options
-//   hard: { time: 30, optionCount: 6 }     // Short time, more options
-// };

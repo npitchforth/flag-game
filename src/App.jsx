@@ -41,6 +41,8 @@ const App = () => {
   const [leaderboardDifficulty, setLeaderboardDifficulty] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [playerName, setPlayerName] = useState('');
+  const [streakBonusCount, setStreakBonusCount] = useState(0);
+  const [showStreakBonusMessage, setShowStreakBonusMessage] = useState(false);
 
   const timerRef = useRef(null);
   const progressBarRef = useRef(null);
@@ -190,6 +192,8 @@ const App = () => {
     setHighScoreDifficulty('');
     setLeaderboardPosition(null);
     setLeaderboardDifficulty('');
+    setStreakBonusCount(0);
+    setShowStreakBonusMessage(false);
     console.log('🎮 New game started, isNewHighScore reset to false');
     clearInterval(timerRef.current);
     timerRef.current = setInterval(() => setTimeLeft(t => t - 1), 1000);
@@ -323,8 +327,22 @@ const App = () => {
     if (isCorrect) {
       setScore(s => s + 1);
       setCorrectAnswers(ca => ca + 1);
-      setCurrentStreak(cs => cs + 1);
-      setStreak(s => Math.max(s, currentStreak + 1));
+
+      const newStreak = currentStreak + 1;
+      setCurrentStreak(newStreak);
+      setStreak(s => Math.max(s, newStreak));
+
+      // Get streak settings for the current difficulty
+      const { streakThreshold, streakTimeBonus, maxStreakBonuses } = difficultySettings[difficulty];
+
+      // Check for streak bonus using dynamic settings
+      if (streakThreshold > 0 && newStreak > 0 && newStreak % streakThreshold === 0 && streakBonusCount < maxStreakBonuses) {
+        setTimeLeft(t => t + streakTimeBonus);
+        setStreakBonusCount(b => b + 1);
+        setShowStreakBonusMessage(true);
+        setTimeout(() => setShowStreakBonusMessage(false), 2000);
+      }
+
       setFeedback('Correct!');
       setCorrectGuesses(prev => [...prev, questionCountry]);
       setTimeout(() => generateQuestion(), 1000);
@@ -461,8 +479,15 @@ const App = () => {
         />
         {questionCountry && (
           <>
-            <div className="question">
-              Which is the flag of <span style={{color: '#2563eb'}}>{questionCountry.name}</span>?
+            <div className="question-container">
+              <div className="question">
+                Which is the flag of <span style={{color: '#2563eb'}}>{questionCountry.name}</span>?
+                {showStreakBonusMessage && (
+                  <span className="streak-bonus-message-absolute">
+                    Streak! +{difficultySettings[difficulty].streakTimeBonus}s
+                  </span>
+                )}
+              </div>
             </div>
             <FlagOptionsGrid
               flagOptions={flagOptions}
