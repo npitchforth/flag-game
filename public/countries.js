@@ -324,7 +324,7 @@ window.countries = [
    { code: 'au-aboriginal', name: 'Australia (Aboriginal)', difficulty: 'easy', entity: 'other', flagSource: 'local' },
    { code: 'eu', name: 'the European Union', difficulty: 'easy', entity: 'organisation', flagSource: 'local' },
    { code: 'african-union', name: 'the African Union', difficulty: 'medium', entity: 'organisation', flagSource: 'local' },
-   { code: 'un', name: 'the United Nations)', difficulty: 'easy', entity: 'organisation', flagSource: 'local' },
+   { code: 'un', name: 'the United Nations', difficulty: 'easy', entity: 'organisation', flagSource: 'local' },
    { code: 'red-cross', name: 'The Red Cross', difficulty: 'easy', entity: 'organisation', flagSource: 'local' },
    { code: 'olympic-movement', name: 'the Olympic Movement', difficulty: 'easy', entity: 'organisation', flagSource: 'local' },
    { code: 'red-crescent', name: 'The Red Crescent', difficulty: 'medium', entity: 'organisation', flagSource: 'local' },

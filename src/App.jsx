@@ -10,6 +10,8 @@ import PrivacyPolicy from './components/PrivacyPolicy';
 import { addHighScore, getHighScores } from './config/supabase';
 import { supabase } from './config/supabase';
 import { difficultySettings } from './config/difficultySettings';
+import { generateUUID } from './utils/helpers';
+import { logQuestionAttempt } from './services/questionLogger';
 
 const App = () => {
   const [difficulty, setDifficulty] = useState('medium');
@@ -43,6 +45,7 @@ const App = () => {
   const [playerName, setPlayerName] = useState('');
   const [streakBonusCount, setStreakBonusCount] = useState(0);
   const [showStreakBonusMessage, setShowStreakBonusMessage] = useState(false);
+  const [gameSessionId, setGameSessionId] = useState(null);
 
   const timerRef = useRef(null);
   const progressBarRef = useRef(null);
@@ -194,6 +197,7 @@ const App = () => {
     setLeaderboardDifficulty('');
     setStreakBonusCount(0);
     setShowStreakBonusMessage(false);
+    setGameSessionId(generateUUID());
     console.log('🎮 New game started, isNewHighScore reset to false');
     clearInterval(timerRef.current);
     timerRef.current = setInterval(() => setTimeLeft(t => t - 1), 1000);
@@ -324,6 +328,19 @@ const App = () => {
     setClickedFlag(country.code);
     setTotalAnswers(t => t + 1);
     
+    // Log the question attempt
+    logQuestionAttempt({
+      gameSessionId: gameSessionId,
+      questionCountryCode: questionCountry.code,
+      optionCountryCodes: flagOptions
+        .map(opt => opt.code)
+        .filter(code => code !== questionCountry.code),
+      guessedCountryCode: country.code,
+      wasCorrect: isCorrect,
+      difficulty: difficulty,
+      sovereignOnlyMode: sovereignOnly,
+    });
+
     if (isCorrect) {
       setScore(s => s + 1);
       setCorrectAnswers(ca => ca + 1);
