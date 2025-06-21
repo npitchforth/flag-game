@@ -73,6 +73,132 @@ h1 {
 #timer.danger { color: #ef4444; }
 #timer.warning { color: #f59e42; }
 
+/* Prevent any scaling on timer container */
+.timer-stat {
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Floating bonus indicator - Candy Crush Sparkle Style */
+.floating-bonus-indicator {
+  position: fixed;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  background: linear-gradient(45deg, #facc15, #fbbf24, #f59e0b, #d97706, #facc15);
+  background-size: 200% 200%;
+  color: #1f2937;
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-size: 2.4rem;
+  font-weight: bold;
+  box-shadow: 0 0 30px rgba(250, 204, 21, 0.8), 0 8px 24px rgba(250, 204, 21, 0.4);
+  z-index: 1000;
+  pointer-events: none;
+  animation: float-down-fade-right 2.5s ease-out forwards, gradient-shift 2.5s ease-out;
+  overflow: visible;
+  width: auto;
+  height: auto;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.floating-bonus-indicator::before,
+.floating-bonus-indicator::after {
+  content: "✨";
+  position: absolute;
+  font-size: 1.5rem;
+  animation: sparkle 0.5s ease-in-out infinite alternate;
+  z-index: 1001;
+}
+
+.floating-bonus-indicator::before {
+  top: -10px;
+  left: -10px;
+  animation-delay: 0s;
+}
+
+.floating-bonus-indicator::after {
+  bottom: -10px;
+  right: -10px;
+  animation-delay: 0.25s;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes sparkle {
+  0% {
+    opacity: 0.3;
+    transform: scale(0.8) rotate(0deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.2) rotate(180deg);
+  }
+}
+
+@keyframes float-down-fade-right {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.8);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+  85% {
+    opacity: 1;
+    transform: translateY(50vh) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(70vh) scale(0.8);
+  }
+}
+
+/* Mobile adjustments for floating bonus */
+@media (max-width: 768px) {
+  .floating-bonus-indicator {
+    font-size: 2.2rem;
+    padding: 10px 20px;
+  }
+  
+  .floating-bonus-indicator::before,
+  .floating-bonus-indicator::after {
+    font-size: 1.3rem;
+  }
+  
+  @keyframes float-down-fade-right {
+    0% {
+      opacity: 0;
+      transform: translateY(-50%) scale(0.8);
+    }
+    15% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    85% {
+      opacity: 1;
+      transform: translate(-50%, 250px) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, 350px) scale(0.8);
+    }
+  }
+}
+
 /* Progress Bar Styles */
 .progress-container { 
   width: 100%; 
@@ -101,45 +227,6 @@ h1 {
   position: relative;
   font-size: 1.3rem;
   font-weight: 500;
-}
-
-/* New absolute-positioned bonus message */
-.streak-bonus-message-absolute {
-  position: absolute;
-  left: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-left: 15px;
-  white-space: nowrap;
-
-  background-color: #facc15;
-  color: #1f2937;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  
-  animation: bonus-pop-fade 2s ease-in-out;
-}
-
-@keyframes bonus-pop-fade {
-  0% {
-    opacity: 0;
-    transform: translateY(-50%) scale(0.7);
-  }
-  15% {
-    opacity: 1;
-    transform: translateY(-50%) scale(1);
-  }
-  85% {
-    opacity: 1;
-    transform: translateY(-50%) scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-50%) scale(0.7);
-  }
 }
 
 /* Flag Options Styles */
@@ -1378,7 +1465,6 @@ background-color:#1e40af;
 .native-app .game-over-container {
   padding-top: env(safe-area-inset-top, 40px);
 }
-
 /* Safe area for the main container in native apps */
 .native-app.container {
   padding-top: env(safe-area-inset-top, 20px);

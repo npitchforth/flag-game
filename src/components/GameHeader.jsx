@@ -1,11 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Capacitor } from '@capacitor/core';
 
-const GameHeader = ({ score, timeLeft, currentStreak }) => {
-  const getTimerClass = () => timeLeft <= 10 ? 'danger' : timeLeft <= 20 ? 'warning' : '';
+const GameHeader = ({ score, timeLeft, currentStreak, showStreakBonus, streakTimeBonus, streakBonusKey }) => {
+  const [showFloatingBonus, setShowFloatingBonus] = useState(false);
+  
+  const getTimerClass = () => {
+    let classes = [];
+    if (timeLeft <= 10) classes.push('danger');
+    else if (timeLeft <= 20) classes.push('warning');
+    return classes.join(' ');
+  };
 
   // Check if the platform is mobile (iOS or Android)
   const isMobile = Capacitor.getPlatform() === 'android' || Capacitor.getPlatform() === 'ios';
+
+  // Handle streak bonus animation - trigger on every streakBonusKey change
+  useEffect(() => {
+    if (streakBonusKey > 0 && streakTimeBonus > 0) {
+      setShowFloatingBonus(true);
+      
+      // Remove the floating bonus element after animation completes
+      const timer = setTimeout(() => {
+        setShowFloatingBonus(false);
+      }, 2500); // Doubled the time for twice as long visibility
+      
+      return () => clearTimeout(timer);
+    }
+  }, [streakBonusKey]); // Only depend on streakBonusKey which increments each time
 
   return (
     <>
@@ -43,6 +64,11 @@ const GameHeader = ({ score, timeLeft, currentStreak }) => {
           )}
         </div>
       </div>
+      {showFloatingBonus && (
+        <div className="floating-bonus-indicator">
+          +{streakTimeBonus}s
+        </div>
+      )}
     </>
   );
 };

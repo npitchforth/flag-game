@@ -44,7 +44,9 @@ const App = () => {
   const [showForm, setShowForm] = useState(false);
   const [playerName, setPlayerName] = useState('');
   const [streakBonusCount, setStreakBonusCount] = useState(0);
-  const [showStreakBonusMessage, setShowStreakBonusMessage] = useState(false);
+  const [showStreakBonus, setShowStreakBonus] = useState(false);
+  const [streakTimeBonus, setStreakTimeBonus] = useState(0);
+  const [streakBonusKey, setStreakBonusKey] = useState(0);
   const [gameSessionId, setGameSessionId] = useState(null);
 
   const timerRef = useRef(null);
@@ -196,7 +198,9 @@ const App = () => {
     setLeaderboardPosition(null);
     setLeaderboardDifficulty('');
     setStreakBonusCount(0);
-    setShowStreakBonusMessage(false);
+    setShowStreakBonus(false);
+    setStreakTimeBonus(0);
+    setStreakBonusKey(0);
     setGameSessionId(generateUUID());
     console.log('🎮 New game started, isNewHighScore reset to false');
     clearInterval(timerRef.current);
@@ -356,8 +360,10 @@ const App = () => {
       if (streakThreshold > 0 && newStreak > 0 && newStreak % streakThreshold === 0 && streakBonusCount < maxStreakBonuses) {
         setTimeLeft(t => t + streakTimeBonus);
         setStreakBonusCount(b => b + 1);
-        setShowStreakBonusMessage(true);
-        setTimeout(() => setShowStreakBonusMessage(false), 2000);
+        setStreakBonusKey(k => k + 1);
+        setShowStreakBonus(true);
+        setStreakTimeBonus(streakTimeBonus);
+        setTimeout(() => setShowStreakBonus(false), 800);
       }
 
       setFeedback('Correct!');
@@ -489,6 +495,9 @@ const App = () => {
           score={score}
           timeLeft={timeLeft}
           currentStreak={currentStreak}
+          showStreakBonus={showStreakBonus}
+          streakTimeBonus={streakTimeBonus}
+          streakBonusKey={streakBonusKey}
         />
         <ProgressBar
           timeLeft={timeLeft}
@@ -499,11 +508,6 @@ const App = () => {
             <div className="question-container">
               <div className="question">
                 Which is the flag of <span style={{color: '#2563eb'}}>{questionCountry.name}</span>?
-                {showStreakBonusMessage && (
-                  <span className="streak-bonus-message-absolute">
-                    Streak! +{difficultySettings[difficulty].streakTimeBonus}s
-                  </span>
-                )}
               </div>
             </div>
             <FlagOptionsGrid
