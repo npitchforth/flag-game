@@ -17,7 +17,10 @@ const GameOverScreen = ({
   showForm,
   playerName,
   onPlayerNameChange,
-  onSubmit
+  onSubmit,
+  isPersonalBest,
+  personalBestPosition,
+  personalBestDifficulty
 }) => {
   // Platform detection for Capacitor-specific styling
   const isNativeApp = Capacitor.isNativePlatform();
@@ -47,6 +50,16 @@ const GameOverScreen = ({
     return positions[position] || '';
   };
 
+  const getPersonalBestPositionText = (position) => {
+    const positions = {
+      1: '1st',
+      2: '2nd',
+      3: '3rd',
+      4: '4th'
+    };
+    return positions[position] || '';
+  };
+
   console.log('🎮 GameOverScreen rendered with props:', {
     correctAnswers,
     totalAnswers,
@@ -66,14 +79,21 @@ const GameOverScreen = ({
       {/* High Score Banner - shown for 1st place */}
       {isNewHighScore && (
         <div className="new-high-score-banner">
-           New {getDifficultyDisplayName(highScoreDifficulty)} Level High Score! 
+           Wow! You've beaten the All Time {getDifficultyDisplayName(highScoreDifficulty)} Level High Score! 
         </div>
       )}
       
       {/* Leaderboard Banner - shown for 2nd, 3rd, 4th place */}
       {!isNewHighScore && leaderboardPosition && (
         <div className="leaderboard-banner">
-           You Made the {getDifficultyDisplayName(leaderboardDifficulty)} Level Leaderboard! ({getPositionText(leaderboardPosition)} Place)
+           Wow, you've made the All Time {getDifficultyDisplayName(leaderboardDifficulty)} Level Leaderboard! ({getPositionText(leaderboardPosition)} Place)
+        </div>
+      )}
+      
+      {/* Personal Best Banner - shown for personal best but not all-time high score */}
+      {!isNewHighScore && !leaderboardPosition && isPersonalBest && (
+        <div className={`personal-best-banner ${personalBestPosition > 1 ? 'secondary' : ''}`}>
+           Congratulations, that's your {personalBestPosition === 1 ? 'best' : getPersonalBestPositionText(personalBestPosition) + ' best'} score on {getDifficultyDisplayName(personalBestDifficulty)} level!
         </div>
       )}
       

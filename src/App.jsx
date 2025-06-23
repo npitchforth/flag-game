@@ -7,7 +7,7 @@ import DifficultySelector from './components/DifficultySelector';
 import GameOverScreen from './components/GameOverScreen';
 import HighScoresModal from './components/HighScoresModal';
 import PrivacyPolicy from './components/PrivacyPolicy';
-import { addHighScore, getHighScores } from './config/supabase';
+import { addHighScore, getHighScores, getPersonalBestScores } from './config/supabase';
 import { supabase } from './config/supabase';
 import { difficultySettings } from './config/difficultySettings';
 import { generateUUID } from './utils/helpers';
@@ -48,6 +48,11 @@ const App = () => {
   const [streakTimeBonus, setStreakTimeBonus] = useState(0);
   const [streakBonusKey, setStreakBonusKey] = useState(0);
   const [gameSessionId, setGameSessionId] = useState(null);
+  
+  // Personal best notification state
+  const [isPersonalBest, setIsPersonalBest] = useState(false);
+  const [personalBestPosition, setPersonalBestPosition] = useState(null);
+  const [personalBestDifficulty, setPersonalBestDifficulty] = useState('');
 
   const timerRef = useRef(null);
   const progressBarRef = useRef(null);
@@ -166,6 +171,39 @@ const App = () => {
     return null;
   };
 
+  // Function to check personal best position
+  const checkPersonalBestPosition = (newScore, personalBestScores, difficulty) => {
+    console.log('🏆 Checking personal best position for difficulty:', difficulty);
+    
+    // Filter personal best scores by difficulty
+    const difficultyScores = personalBestScores.filter(score => score.difficulty === difficulty);
+    console.log('🏆 Personal best scores for', difficulty, ':', difficultyScores);
+    
+    // Add the new score to the list and sort
+    const allScores = [...difficultyScores, newScore];
+    const sortedScores = sortScores(allScores);
+    
+    console.log('🏆 All personal best scores sorted:', sortedScores);
+    
+    // Find the position of the new score
+    const newScoreIndex = sortedScores.findIndex(score => 
+      score.score === newScore.score &&
+      score.accuracy === newScore.accuracy &&
+      score.sovereignOnly === newScore.sovereignOnly &&
+      score.date === newScore.date
+    );
+    
+    const position = newScoreIndex + 1; // Convert to 1-based position
+    console.log('🏆 New personal best position:', position);
+    
+    // Return position if it's 1st, 2nd, 3rd, or 4th place (but not if it's also an all-time high score)
+    if (position >= 1 && position <= 4) {
+      return position;
+    }
+    
+    return null;
+  };
+
   useEffect(() => () => clearInterval(timerRef.current), []);
   useEffect(() => {
     if (timeLeft === 0) endGame();
@@ -207,6 +245,11 @@ const App = () => {
     timerRef.current = setInterval(() => setTimeLeft(t => t - 1), 1000);
     generateQuestion([]);
     setGameStarted(true);
+    
+    // Reset personal best states
+    setIsPersonalBest(false);
+    setPersonalBestPosition(null);
+    setPersonalBestDifficulty('');
   };
 
   const endGame = async () => {
@@ -233,7 +276,11 @@ const App = () => {
       sovereignOnly
     });
 
-    // Check if this is a new high score before saving
+    // Reload high scores from Supabase to get the latest data before checking
+    console.log('🎮 Reloading high scores from Supabase before checking...');
+    await loadHighScores();
+    
+    // Check if this is a new high score against the latest data
     console.log('🎮 Current high scores before check:', highScores);
     const isNewHigh = isTopScoreForDifficulty(newScore, highScores, difficulty);
     console.log('🎮 Setting isNewHighScore to:', isNewHigh);
@@ -255,7 +302,27 @@ const App = () => {
         setShowForm(true);
       }
     }
-
+    
+    // Check for personal best (only if not an all-time high score)
+    if (!isNewHigh) {
+      try {
+        console.log('🏆 Loading personal best scores...');
+        const personalBestScores = await getPersonalBestScores();
+        console.log('🏆 Personal best scores loaded:', personalBestScores);
+        
+        const personalBestPosition = checkPersonalBestPosition(newScore, personalBestScores, difficulty);
+        console.log('🏆 Personal best position:', personalBestPosition);
+        
+        if (personalBestPosition) {
+          setIsPersonalBest(true);
+          setPersonalBestPosition(personalBestPosition);
+          setPersonalBestDifficulty(difficulty);
+        }
+      } catch (error) {
+        console.error('Error checking personal best scores:', error);
+      }
+    }
+    
     // Save to local storage as backup
     const updatedLocalScores = sortScores([...highScores, newScore]).slice(0, 10);
     localStorage.setItem('flagGameHighScores', JSON.stringify(updatedLocalScores));
@@ -485,6 +552,9 @@ const App = () => {
           playerName={playerName}
           onPlayerNameChange={setPlayerName}
           onSubmit={handleSubmit}
+          isPersonalBest={isPersonalBest}
+          personalBestPosition={personalBestPosition}
+          personalBestDifficulty={personalBestDifficulty}
         />
       );
     }

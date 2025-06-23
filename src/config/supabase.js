@@ -66,3 +66,39 @@ export async function getHighScores() {
   }));
 }
 
+export async function getPersonalBestScores() {
+  try {
+    // Get the current device ID to get scores from this device only
+    const currentDeviceId = await getDeviceId();
+    
+    const { data, error } = await supabase
+      .from('high_scores')
+      .select('*')
+      .eq('device_id', currentDeviceId) // Only scores from current device
+      .order('score', { ascending: false })
+      .order('accuracy', { ascending: false })
+      .order('created_at', { ascending: true });
+      
+    if (error) {
+      console.error('Error fetching personal best scores:', error);
+      return [];
+    }
+    
+    // Transform the data to match the expected format
+    return data.map(score => ({
+      playerName: score.player_name,
+      score: score.score,
+      date: score.created_at,
+      difficulty: score.difficulty,
+      accuracy: score.accuracy,
+      sovereignOnly: score.sovereign_only,
+      streak: score.streak,
+      deviceId: score.device_id,
+      platform: score.platform
+    }));
+  } catch (error) {
+    console.error('Error getting device ID or fetching personal best scores:', error);
+    return [];
+  }
+}
+
