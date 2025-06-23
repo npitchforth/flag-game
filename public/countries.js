@@ -329,7 +329,20 @@ window.countries = [
    { code: 'Buddhism', name: 'Buddhism', difficulty: 'hard', entity: 'other', flagSource: 'local' },
    { code: 'Christianity', name: 'Christianity', difficulty: 'hard', entity: 'other', flagSource: 'local' },
    { code: 'Hinduism', name: 'Hinduism', difficulty: 'hard', entity: 'other', flagSource: 'local' },
-   { code: 'arab-league', name: 'the Arab League', difficulty: 'hard', entity: 'organisation', flagSource: 'local' }
+   { code: 'arab-league', name: 'the Arab League', difficulty: 'hard', entity: 'organisation', flagSource: 'local' },
+   { code: 'ca-ab', name: 'Alberta', difficulty: 'hard', entity: 'province', flagSource: 'local' },
+   { code: 'ca-bc', name: 'British Columbia', difficulty: 'hard', entity: 'province', flagSource: 'local' },
+   { code: 'ca-mb', name: 'Manitoba', difficulty: 'hard', entity: 'province', flagSource: 'local' },
+   { code: 'ca-nb', name: 'New Brunswick', difficulty: 'hard', entity: 'province', flagSource: 'local' },
+   { code: 'ca-nl', name: 'Newfoundland and Labrador', difficulty: 'hard', entity: 'province', flagSource: 'local' },
+   { code: 'ca-ns', name: 'Nova Scotia', difficulty: 'hard', entity: 'province', flagSource: 'local' },
+   { code: 'ca-on', name: 'Ontario', difficulty: 'hard', entity: 'province', flagSource: 'local' },
+   { code: 'ca-pe', name: 'Prince Edward Island', difficulty: 'hard', entity: 'province', flagSource: 'local' },
+   { code: 'ca-qc', name: 'Quebec', difficulty: 'hard', entity: 'province', flagSource: 'local' },
+   { code: 'ca-sk', name: 'Saskatchewan', difficulty: 'hard', entity: 'province', flagSource: 'local' },
+   { code: 'ca-nt', name: 'Northwest Territories (Canada)', difficulty: 'hard', entity: 'territory', flagSource: 'local' },
+   { code: 'ca-nu', name: 'Nunavut', difficulty: 'hard', entity: 'territory', flagSource: 'local' },
+   { code: 'ca-yt', name: 'Yukon (Canadian territory)', difficulty: 'hard', entity: 'territory', flagSource: 'local' }
 ];
 
 const easyCountryCodes = countries.filter(c => c.difficulty === 'easy').map(c => c.code);
