@@ -12,6 +12,9 @@ import { supabase } from './config/supabase';
 import { difficultySettings } from './config/difficultySettings';
 import { generateUUID } from './utils/helpers';
 import { logQuestionAttempt } from './services/questionLogger';
+import './styles/shared.css';
+import './styles/web.css';
+import './styles/capacitor.css';
 
 const App = () => {
   const [difficulty, setDifficulty] = useState('medium');

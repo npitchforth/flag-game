@@ -13,6 +13,7 @@ const GameHeader = ({ score, timeLeft, currentStreak, showStreakBonus, streakTim
 
   // Check if the platform is mobile (iOS or Android)
   const isMobile = Capacitor.getPlatform() === 'android' || Capacitor.getPlatform() === 'ios';
+  const isNativeApp = Capacitor.isNativePlatform();
 
   // Handle streak bonus animation - trigger on every streakBonusKey change
   useEffect(() => {
@@ -33,7 +34,7 @@ const GameHeader = ({ score, timeLeft, currentStreak, showStreakBonus, streakTim
       <header>
         <h1 style={{ padding: isMobile ? '20px' : '0' }}>Guessy Flaggy</h1>
       </header>
-      <div className="game-info">
+      <div className={`game-info ${isNativeApp ? 'native-app' : ''}`}>
         <div className={`game-stats ${isMobile ? 'mobile-layout' : ''}`}>
           <div className="stat timer-stat">
             <span className={`stat-value ${getTimerClass()}`} id="timer">{timeLeft}</span>

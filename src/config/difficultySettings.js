@@ -3,7 +3,7 @@
 
 export const difficultySettings = {
   easy: { 
-    time: 13, 
+    time: 50, 
     optionCount: 4,
     streakThreshold: 5, // Answers needed for a streak bonus
     streakTimeBonus: 3,   // Seconds to add for a bonus

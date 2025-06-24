@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { getDeviceId } from '../services/deviceId';
-import '../styles.css';
 
 const HighScoresModal = ({ isOpen, onClose, highScores, loading }) => {
   const [activeTab, setActiveTab] = useState('my'); // 'all' or 'my' - default to 'my'
@@ -50,7 +49,7 @@ const HighScoresModal = ({ isOpen, onClose, highScores, loading }) => {
   const difficultyEmojis = {
     easy: '🟢',
     medium: '🟦',
-    hard: '⬛',
+    hard: <span className="rotate-emoji">⬛</span>,
   };
 
   const scoresByDifficulty = difficulties.map(difficultyLevel => ({

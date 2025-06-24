@@ -1,0 +1,197 @@
+/* Capacitor-specific styles */
+
+.modal.native-app {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content.native-content {
+  border-radius: 16px;
+}
+
+.native-app .game-stats:not(.mobile-layout) {
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.native-app .stat {
+  min-width: 120px;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.native-app .stat-value {
+  font-size: 1.8rem;
+  margin-bottom: 0.3rem;
+}
+
+.native-app .stat-label {
+  font-size: 0.9rem;
+}
+
+.native-app.container {
+  padding: 16px;
+}
+
+.native-app .privacy-policy-content {
+  border-radius: 16px;
+}
+
+.native-app .privacy-policy-overlay {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.native-app header h1 {
+  font-size: 1.8rem;
+}
+
+@media (max-width: 480px) {
+  .native-app header {
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .native-app header {
+    margin-bottom: 1rem;
+  }
+}
+
+.native-app .game-over-container {
+  padding: 1rem;
+}
+
+.native-app.container {
+  padding: 16px;
+}
+
+/* --- DEBUG: Force grid layout and full-width stat boxes for mobile layout in Capacitor app --- */
+
+.native-app .game-stats.mobile-layout {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 1rem !important;
+  padding: 0 1rem !important;
+  width: auto !important;
+  max-width: 400px !important;
+  margin: 0 auto !important;
+  flex-direction: unset !important;
+  align-items: unset !important;
+}
+
+.native-app .game-stats.mobile-layout .timer-stat {
+  grid-column: 1 / -1 !important;
+  order: unset !important;
+  min-width: unset !important;
+  padding: 1rem 0.5rem !important;
+  border-radius: 10px !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04) !important;
+  border: 1px solid #e5e7eb !important;
+  background: #fff !important;
+  width: 100% !important;
+  min-height: 80px !important;
+  justify-content: center !important;
+}
+
+.native-app .game-stats.mobile-layout .bottom-row {
+  display: contents !important;
+  gap: unset !important;
+  justify-content: unset !important;
+  width: unset !important;
+}
+
+.native-app .game-stats.mobile-layout .bottom-row .stat,
+.native-app .game-stats.mobile-layout .stat {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  min-width: unset !important;
+  padding: 1rem 0.5rem !important;
+  border-radius: 10px !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04) !important;
+  border: 1px solid #e5e7eb !important;
+  background: #fff !important;
+  margin-bottom: 0 !important;
+  min-height: 80px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+
+.native-app .game-stats.mobile-layout .stat-value {
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 0.3rem !important;
+}
+
+.native-app .game-stats.mobile-layout .stat-label {
+  font-size: 0.75rem !important;
+}
+
+.game-stats:not(.mobile-layout) {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.game-stats:not(.mobile-layout) .stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  padding: 0.7rem 1.2rem;
+  min-width: 80px;
+  border: 1px solid #e5e7eb;
+}
+
+.native-app .high-scores-tabs {
+  border-radius: 12px;
+}
+
+.native-app .tab-button {
+  border-radius: 8px;
+  font-size: 0.9rem;
+  padding: 10px 16px;
+}
+
+.modal.native-app .modal-close,
+.modal.native-app .info-modal-close,
+.modal.native-app .close-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: none;
+  font-size: 1.2rem;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-modal,
+.modal.native-app {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+} 
