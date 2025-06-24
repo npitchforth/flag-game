@@ -31,7 +31,7 @@ const GameHeader = ({ score, timeLeft, currentStreak, showStreakBonus, streakTim
 
   return (
     <>
-      <header>
+      <header className="game-header-main">
         <h1 style={{ padding: isMobile ? '20px' : '0' }}>Guessy Flaggy</h1>
       </header>
       <div className={`game-info ${isNativeApp ? 'native-app' : ''}`}>

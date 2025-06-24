@@ -54,8 +54,12 @@
 }
 
 @media (max-width: 768px) {
-  .native-app header {
-    margin-bottom: 1rem;
+  .native-app .game-header-main {
+    margin-bottom: 0.2rem !important;
+  }
+  .native-app .game-header-main h1 {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
   }
 }
 

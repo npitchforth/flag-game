@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Capacitor } from '@capacitor/core';
 
 const PrivacyPolicy = ({ isOpen, onClose }) => {
   const isNativeApp = Capacitor.isNativePlatform();
   const containerClass = isNativeApp ? 'container native-app' : 'container';
+
+  useEffect(() => {
+    // Dynamically render the email address for obfuscation
+    const email = 'privacy' + '@' + 'atlasdiscoveryworkshop' + '.' + 'com';
+    const el = document.getElementById('obfuscated-email');
+    if (el) {
+      el.textContent = email;
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -107,7 +116,10 @@ const PrivacyPolicy = ({ isOpen, onClose }) => {
 
           <h3>11. Contact Us</h3>
           <p>If you have any questions about this Privacy Policy, please contact us:</p>
-          <p>By email: <a href="mailto:privacy@atlasdiscoveryworkshop.com">privacy@atlasdiscoveryworkshop.com</a></p>
+          <p>
+            By email: <span id="obfuscated-email"></span>
+            <noscript>privacy [at] atlasdiscoveryworkshop [dot] com</noscript>
+          </p>
         </div>
 
         <div className="privacy-policy-footer">
