@@ -17,9 +17,9 @@
     "start:clean": "lsof -ti:3000 | xargs kill -9 || true; sleep 1; lsof -ti:3000 || true; npm run dev -- --port 3000"
   },
   "dependencies": {
-    "@capacitor/android": "^5.7.0",
-    "@capacitor/cli": "^5.7.0",
-    "@capacitor/core": "^5.7.0",
+    "@capacitor/android": "^5.7.8",
+    "@capacitor/cli": "^5.7.8",
+    "@capacitor/core": "^5.7.8",
     "@capacitor/device": "^5.0.8",
     "@ionic/core": "^7.7.0",
     "@ionic/react": "^7.7.0",

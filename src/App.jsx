@@ -46,6 +46,8 @@ const App = () => {
   const [leaderboardDifficulty, setLeaderboardDifficulty] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [playerName, setPlayerName] = useState('');
+  const [showAnonymousConfirmation, setShowAnonymousConfirmation] = useState(false);
+  const [showDataDisclosure, setShowDataDisclosure] = useState(false);
   const [streakBonusCount, setStreakBonusCount] = useState(0);
   const [showStreakBonus, setShowStreakBonus] = useState(false);
   const [streakTimeBonus, setStreakTimeBonus] = useState(0);
@@ -67,6 +69,14 @@ const App = () => {
   // Load high scores from Supabase on component mount
   useEffect(() => {
     loadHighScores();
+  }, []);
+
+  // Check if this is the user's first visit and show data disclosure
+  useEffect(() => {
+    const hasSeenDisclosure = localStorage.getItem('flagGameDataDisclosureSeen');
+    if (!hasSeenDisclosure) {
+      setShowDataDisclosure(true);
+    }
   }, []);
 
   const loadHighScores = async () => {
@@ -450,8 +460,17 @@ const App = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Use "Anonymous" if playerName is empty
-    const nameToSubmit = playerName.trim() === '' ? 'Anonymous' : playerName;
+    // Check if player name is blank and show confirmation if needed
+    if (playerName.trim() === '') {
+      setShowAnonymousConfirmation(true);
+      return;
+    }
+    
+    // If name is not blank, proceed with submission
+    await submitHighScore(playerName);
+  };
+
+  const submitHighScore = async (nameToSubmit) => {
     console.log('Player Name:', nameToSubmit); // Log the player name
 
     // Fetch the most recent record from Supabase
@@ -512,6 +531,30 @@ const App = () => {
 
     setShowForm(false); // Hide the form after submission
     setPlayerName(''); // Reset the input field
+    setShowAnonymousConfirmation(false); // Hide confirmation dialog
+  };
+
+  const handleAnonymousConfirm = () => {
+    submitHighScore('Anonymous');
+  };
+
+  const handleAnonymousCancel = () => {
+    setShowAnonymousConfirmation(false);
+    // Focus back on the input field so user can enter their name
+    setTimeout(() => {
+      const input = document.querySelector('.player-name-input');
+      if (input) input.focus();
+    }, 100);
+  };
+
+  const handleDataDisclosureAcknowledge = () => {
+    localStorage.setItem('flagGameDataDisclosureSeen', 'true');
+    setShowDataDisclosure(false);
+  };
+
+  const handleDataDisclosurePrivacyPolicy = () => {
+    setShowDataDisclosure(false);
+    setShowPrivacyPolicy(true);
   };
 
   const renderMainContent = () => {
@@ -531,6 +574,30 @@ const App = () => {
               High Scores {loadingHighScores && '(Loading...)'}
             </button>
           </div>
+          
+          {/* Data Disclosure Modal */}
+          {showDataDisclosure && (
+            <div className="data-disclosure-overlay">
+              <div className="data-disclosure-modal">
+                <h3>Data Collection Notice</h3>
+                <p>This app collects your game scores and limited device information to provide leaderboards and personal statistics.</p>
+                <div className="data-disclosure-buttons">
+                  <button 
+                    className="button secondary" 
+                    onClick={handleDataDisclosurePrivacyPolicy}
+                  >
+                    Privacy Policy
+                  </button>
+                  <button 
+                    className="button success" 
+                    onClick={handleDataDisclosureAcknowledge}
+                  >
+                    Got it
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       );
     }
@@ -558,6 +625,9 @@ const App = () => {
           isPersonalBest={isPersonalBest}
           personalBestPosition={personalBestPosition}
           personalBestDifficulty={personalBestDifficulty}
+          showAnonymousConfirmation={showAnonymousConfirmation}
+          onAnonymousConfirm={handleAnonymousConfirm}
+          onAnonymousCancel={handleAnonymousCancel}
         />
       );
     }

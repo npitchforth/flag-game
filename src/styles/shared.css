@@ -1274,4 +1274,192 @@ margin-left: 0.5rem;
 
 .personal-best-banner.secondary span {
   animation: subtleTextPop 0.8s ease-in-out infinite alternate;
+}
+
+/* Info Modal Styles */
+.info-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Confirmation Dialog Styles */
+.confirmation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.confirmation-dialog {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.confirmation-dialog h3 {
+  margin: 0 0 16px 0;
+  color: #1f2937;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.confirmation-dialog p {
+  margin: 0 0 24px 0;
+  color: #4b5563;
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+.confirmation-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.confirmation-buttons .button {
+  min-width: 120px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+}
+
+.confirmation-buttons .button.secondary {
+  background: #6b7280;
+  color: white;
+}
+
+.confirmation-buttons .button.secondary:hover {
+  background: #4b5563;
+}
+
+/* Mobile responsiveness for confirmation dialog */
+@media (max-width: 480px) {
+  .confirmation-dialog {
+    margin: 20px;
+    padding: 20px;
+  }
+  
+  .confirmation-buttons {
+    flex-direction: column;
+  }
+  
+  .confirmation-buttons .button {
+    width: 100%;
+    min-width: auto;
+  }
+}
+
+/* Data Disclosure Modal Styles */
+.data-disclosure-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 10002;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.data-disclosure-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.data-disclosure-modal h3 {
+  margin: 0 0 16px 0;
+  color: #1f2937;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.data-disclosure-modal p {
+  margin: 0 0 24px 0;
+  color: #4b5563;
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+.data-disclosure-modal .button {
+  min-width: 120px;
+  padding: 10px 24px;
+  font-size: 1rem;
+}
+
+.data-disclosure-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.data-disclosure-buttons .button {
+  min-width: 120px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+}
+
+.data-disclosure-buttons .button.secondary {
+  background: #f3f4f6;
+  color: #000000;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.data-disclosure-buttons .button.secondary:hover {
+  background: #e5e7eb;
+}
+
+.data-disclosure-buttons .button.success {
+  background: #2563eb;
+}
+
+/* Mobile responsiveness for data disclosure modal */
+@media (max-width: 480px) {
+  .data-disclosure-modal {
+    margin: 20px;
+    padding: 20px;
+  }
+  
+  .data-disclosure-buttons {
+    flex-direction: column;
+  }
+  
+  .data-disclosure-buttons .button {
+    width: 100%;
+    min-width: auto;
+  }
 } 

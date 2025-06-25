@@ -20,7 +20,10 @@ const GameOverScreen = ({
   onSubmit,
   isPersonalBest,
   personalBestPosition,
-  personalBestDifficulty
+  personalBestDifficulty,
+  showAnonymousConfirmation,
+  onAnonymousConfirm,
+  onAnonymousCancel
 }) => {
   // Platform detection for Capacitor-specific styling
   const isNativeApp = Capacitor.isNativePlatform();
@@ -109,6 +112,32 @@ const GameOverScreen = ({
           />
           <button type="submit" className="submit-button">Submit</button>
         </form>
+      )}
+      
+      {/* Anonymous Confirmation Dialog */}
+      {showAnonymousConfirmation && (
+        <div className="confirmation-overlay">
+          <div className="confirmation-dialog">
+            <h3>No Name Entered!</h3>
+            <p>Are you sure you don't want to enter a name? If you don't, your high score will be displayed on the leaderboard with the name "Anonymous".</p>
+            <div className="confirmation-buttons">
+              <button 
+                type="button" 
+                className="button secondary" 
+                onClick={onAnonymousConfirm}
+              >
+                Remain Anonymous
+              </button>
+              <button 
+                type="button" 
+                className="button success" 
+                onClick={onAnonymousCancel}
+              >
+                Enter Name
+              </button>
+            </div>
+          </div>
+        </div>
       )}
       
       <div className="game-over">
