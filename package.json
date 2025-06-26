@@ -5,7 +5,7 @@
   "scripts": {
     "build": "webpack --mode production",
     "dev": "webpack serve --mode development",
-    "vercel-build": "npm run build",
+    "vercel-build": "echo 'Starting Vercel build...' && npm run build && echo 'Build completed successfully'",
     "start": "webpack serve --open",
     "ionic:build": "npm run build",
     "ionic:serve": "npm run dev",

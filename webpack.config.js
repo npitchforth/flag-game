@@ -56,8 +56,15 @@ module.exports = (env, argv) => {
         ]
       }),
       new webpack.DefinePlugin({
-        'process.env.SUPABASE_URL': JSON.stringify(process.env.SUPABASE_URL),
-        'process.env.SUPABASE_KEY': JSON.stringify(process.env.SUPABASE_KEY),
+        'process.env.SUPABASE_URL': JSON.stringify(process.env.SUPABASE_URL || ''),
+        'process.env.SUPABASE_KEY': JSON.stringify(process.env.SUPABASE_KEY || ''),
+        'process.env.FIREBASE_API_KEY': JSON.stringify(process.env.FIREBASE_API_KEY || ''),
+        'process.env.FIREBASE_AUTH_DOMAIN': JSON.stringify(process.env.FIREBASE_AUTH_DOMAIN || ''),
+        'process.env.FIREBASE_PROJECT_ID': JSON.stringify(process.env.FIREBASE_PROJECT_ID || ''),
+        'process.env.FIREBASE_STORAGE_BUCKET': JSON.stringify(process.env.FIREBASE_STORAGE_BUCKET || ''),
+        'process.env.FIREBASE_MESSAGING_SENDER_ID': JSON.stringify(process.env.FIREBASE_MESSAGING_SENDER_ID || ''),
+        'process.env.FIREBASE_APP_ID': JSON.stringify(process.env.FIREBASE_APP_ID || ''),
+        'process.env.FIREBASE_MEASUREMENT_ID': JSON.stringify(process.env.FIREBASE_MEASUREMENT_ID || ''),
       })
     ],
     resolve: {
@@ -78,6 +85,15 @@ module.exports = (env, argv) => {
             '^/flags': ''
           }
         }
+      }
+    },
+    // Add fallbacks for Node.js modules that might not be available in the browser
+    resolve: {
+      extensions: ['.js', '.jsx'],
+      fallback: {
+        "fs": false,
+        "path": require.resolve("path-browserify"),
+        "os": false
       }
     }
   };
