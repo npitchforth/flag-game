@@ -350,10 +350,17 @@ const easyCountryCodes = countries.filter(c => c.difficulty === 'easy').map(c =>
 const mediumCountryCodes = countries.filter(c => c.difficulty === 'medium').map(c => c.code);
 
 
-const getFlagImage = (country) => {
- return country.localFlag ? country.localFlag : `https://flagcdn.com/w320/${country.code}.png`;
+window.getFlagImage = (country) => {
+  if (country.flagSource === 'local') {
+    const assetPath = `assets/flags/${country.code}.png`;
+    if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+      return window.Capacitor.convertFileSrc(assetPath);
+    }
+    return assetPath;
+  }
+  return `https://flagcdn.com/w320/${country.code}.png`;
 };
 
 
-const getByEntity = (type) =>
+window.getByEntity = (type) =>
  window.countries.filter(c => c.entity === type);

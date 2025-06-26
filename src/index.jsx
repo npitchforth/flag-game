@@ -1,10 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import App from './App';
 
 console.log('Index.jsx loaded');
 console.log('React version:', React.version);
-console.log('ReactDOM available:', typeof ReactDOM);
+console.log('createRoot available:', typeof createRoot);
 
 // Error boundary component
 class ErrorBoundary extends React.Component {
@@ -56,11 +56,11 @@ const renderApp = () => {
   console.log('Root element found, rendering app...');
   
   try {
-    ReactDOM.render(
+    const root = createRoot(rootElement);
+    root.render(
       <ErrorBoundary>
         <App />
-      </ErrorBoundary>, 
-      rootElement
+      </ErrorBoundary>
     );
     console.log('App rendered successfully');
   } catch (error) {

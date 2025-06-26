@@ -10,7 +10,7 @@ const FlagOption = ({ country, onClick, isClicked, isCorrect }) => {
     <div className="flag-option" onClick={onClick}>
       <img
         className="flag-img"
-        src={getFlagImage(country)}
+        src={window.getFlagImage ? window.getFlagImage(country) : `https://flagcdn.com/w320/${country.code}.png`}
         alt={country.name}
         style={{
           width: '120px',
@@ -22,19 +22,6 @@ const FlagOption = ({ country, onClick, isClicked, isCorrect }) => {
       />
     </div>
   );
-};
-
-export const getFlagImage = (country) => {
-  console.log('Getting flag image for country:', country);
-  if (country.flagSource === 'local') {
-    const localPath = `/assets/flags/${country.code.toLowerCase()}.png`;
-    console.log('Local flag path:', localPath);
-    return localPath;
-  } else {
-    const externalPath = `https://flagcdn.com/w320/${country.code.toLowerCase()}.png`;
-    console.log('External flag path:', externalPath);
-    return externalPath;
-  }
 };
 
 export default FlagOption; 

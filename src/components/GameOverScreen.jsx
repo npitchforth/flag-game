@@ -1,6 +1,5 @@
 import React from 'react';
 import { Capacitor } from '@capacitor/core';
-import { getFlagImage } from './FlagOption'; // Adjust the path as necessary
 
 const GameOverScreen = ({
   correctAnswers,
@@ -171,7 +170,7 @@ const GameOverScreen = ({
             {correctGuesses.length > 0 ? (
               <div className="flag-list">
                 {correctGuesses.map((country, index) => {
-                  const flagPath = getFlagImage(country);
+                  const flagPath = window.getFlagImage(country);
                   console.log('Correct guess country:', country, 'Flag path:', flagPath);
                   return (
                     <div key={index} className="flag-item">
@@ -194,7 +193,7 @@ const GameOverScreen = ({
             {incorrectGuesses.length > 0 ? (
               <div className="flag-list">
                 {incorrectGuesses.map((country, index) => {
-                  const flagPath = getFlagImage(country);
+                  const flagPath = window.getFlagImage(country);
                   console.log('Incorrect guess country:', country, 'Flag path:', flagPath);
                   return (
                     <div key={index} className="flag-item">

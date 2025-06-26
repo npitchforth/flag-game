@@ -12,6 +12,7 @@ import { supabase } from './config/supabase';
 import { difficultySettings } from './config/difficultySettings';
 import { generateUUID } from './utils/helpers';
 import { logQuestionAttempt } from './services/questionLogger';
+import { logError, logEvent } from './config/firebase';
 import './styles/shared.css';
 import './styles/web.css';
 import './styles/capacitor.css';
@@ -69,6 +70,16 @@ const App = () => {
   // Load high scores from Supabase on component mount
   useEffect(() => {
     loadHighScores();
+    
+    // Initialize Firebase logging
+    try {
+      logEvent('app_start', {
+        platform: Capacitor.isNativePlatform() ? 'native' : 'web',
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      logError(error, { context: 'Firebase initialization' });
+    }
   }, []);
 
   // Check if this is the user's first visit and show data disclosure
@@ -263,6 +274,18 @@ const App = () => {
     setIsPersonalBest(false);
     setPersonalBestPosition(null);
     setPersonalBestDifficulty('');
+    
+    // Log game start to Firebase
+    try {
+      logEvent('game_start', {
+        difficulty,
+        platform: Capacitor.isNativePlatform() ? 'native' : 'web',
+        game_session_id: gameSessionId,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      logError(error, { context: 'game_start logging' });
+    }
   };
 
   const endGame = async () => {
@@ -288,6 +311,25 @@ const App = () => {
       difficulty,
       sovereignOnly
     });
+
+    // Log game end to Firebase
+    try {
+      logEvent('game_end', {
+        game_session_id: gameSessionId,
+        final_score: score,
+        correct_answers: correctAnswers,
+        total_answers: totalAnswers,
+        accuracy: newScore.accuracy,
+        max_streak: streak,
+        final_streak: currentStreak,
+        difficulty,
+        sovereign_only: sovereignOnly,
+        platform: Capacitor.isNativePlatform() ? 'native' : 'web',
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      logError(error, { context: 'game_end logging' });
+    }
 
     // Reload high scores from Supabase to get the latest data before checking
     console.log('🎮 Reloading high scores from Supabase before checking...');
@@ -424,6 +466,24 @@ const App = () => {
       difficulty: difficulty,
       sovereignOnlyMode: sovereignOnly,
     });
+
+    // Log flag click to Firebase
+    try {
+      logEvent('flag_click', {
+        game_session_id: gameSessionId,
+        question_country: questionCountry.code,
+        clicked_country: country.code,
+        is_correct: isCorrect,
+        difficulty,
+        sovereign_only: sovereignOnly,
+        current_score: score,
+        current_streak: currentStreak,
+        platform: Capacitor.isNativePlatform() ? 'native' : 'web',
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      logError(error, { context: 'flag_click logging' });
+    }
 
     if (isCorrect) {
       setScore(s => s + 1);
