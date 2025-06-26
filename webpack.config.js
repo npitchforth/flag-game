@@ -87,14 +87,5 @@ module.exports = (env, argv) => {
         }
       }
     },
-    // Add fallbacks for Node.js modules that might not be available in the browser
-    resolve: {
-      extensions: ['.js', '.jsx'],
-      fallback: {
-        "fs": false,
-        "path": require.resolve("path-browserify"),
-        "os": false
-      }
-    }
   };
 };
