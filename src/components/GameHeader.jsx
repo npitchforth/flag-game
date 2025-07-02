@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Capacitor } from '@capacitor/core';
+import useOrientation from '../hooks/useOrientation';
 
 const GameHeader = ({ score, timeLeft, currentStreak, showStreakBonus, streakTimeBonus, streakBonusKey }) => {
   const [showFloatingBonus, setShowFloatingBonus] = useState(false);
+  const { isLandscape, isNativeApp } = useOrientation();
   
   const getTimerClass = () => {
     let classes = [];
@@ -13,7 +15,6 @@ const GameHeader = ({ score, timeLeft, currentStreak, showStreakBonus, streakTim
 
   // Check if the platform is mobile (iOS or Android)
   const isMobile = Capacitor.getPlatform() === 'android' || Capacitor.getPlatform() === 'ios';
-  const isNativeApp = Capacitor.isNativePlatform();
 
   // Handle streak bonus animation - trigger on every streakBonusKey change
   useEffect(() => {
@@ -29,13 +30,30 @@ const GameHeader = ({ score, timeLeft, currentStreak, showStreakBonus, streakTim
     }
   }, [streakBonusKey]); // Only depend on streakBonusKey which increments each time
 
+  // Determine layout class based on orientation and platform
+  const getLayoutClass = () => {
+    if (!isNativeApp) {
+      // Web version - keep unchanged
+      return isMobile ? 'mobile-layout' : '';
+    }
+    
+    // Native app - responsive to orientation
+    if (isLandscape) {
+      return 'native-landscape-layout';
+    } else {
+      return 'mobile-layout'; // Keep portrait layout unchanged
+    }
+  };
+
+
+
   return (
     <>
       <header className="game-header-main">
         <h1 style={{ padding: isMobile ? '20px' : '0' }}>Guessy Flaggy</h1>
       </header>
       <div className={`game-info ${isNativeApp ? 'native-app' : ''}`}>
-        <div className={`game-stats ${isMobile ? 'mobile-layout' : ''}`}>
+        <div className={`game-stats ${getLayoutClass()}`}>
           <div className="stat timer-stat">
             <span className={`stat-value ${getTimerClass()}`} id="timer">{timeLeft}</span>
             <span className="stat-label">Seconds</span>

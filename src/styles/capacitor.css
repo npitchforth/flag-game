@@ -135,6 +135,69 @@
   font-size: 0.75rem !important;
 }
 
+/* --- Native Landscape Layout: All 4 stats in one horizontal row --- */
+.native-app .game-stats.native-landscape-layout {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 1rem !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 1rem !important;
+  margin: 0 auto !important;
+}
+
+.native-app .game-stats.native-landscape-layout .timer-stat {
+  grid-column: unset !important;
+  order: unset !important;
+  min-width: 80px !important;
+  padding: 0.7rem 1.2rem !important;
+  border-radius: 10px !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04) !important;
+  border: 1px solid #e5e7eb !important;
+  background: #fff !important;
+  width: auto !important;
+  min-height: unset !important;
+  justify-content: center !important;
+}
+
+.native-app .game-stats.native-landscape-layout .bottom-row {
+  display: flex !important;
+  gap: 1rem !important;
+  justify-content: center !important;
+  width: auto !important;
+}
+
+.native-app .game-stats.native-landscape-layout .bottom-row .stat,
+.native-app .game-stats.native-landscape-layout .stat {
+  width: auto !important;
+  box-sizing: border-box !important;
+  min-width: 80px !important;
+  padding: 0.7rem 1.2rem !important;
+  border-radius: 10px !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04) !important;
+  border: 1px solid #e5e7eb !important;
+  background: #fff !important;
+  margin-bottom: 0 !important;
+  min-height: unset !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+
+.native-app .game-stats.native-landscape-layout .stat-value {
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.2rem !important;
+}
+
+.native-app .game-stats.native-landscape-layout .stat-label {
+  font-size: 0.85rem !important;
+}
+
 .game-stats:not(.mobile-layout) {
   display: flex;
   gap: 2rem;

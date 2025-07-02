@@ -1,5 +1,6 @@
 import React from 'react';
 import { Capacitor } from '@capacitor/core';
+import useOrientation from '../hooks/useOrientation';
 
 const GameOverScreen = ({
   correctAnswers,
@@ -26,6 +27,8 @@ const GameOverScreen = ({
 }) => {
   // Platform detection for Capacitor-specific styling
   const isNativeApp = Capacitor.isNativePlatform();
+  const isMobile = Capacitor.getPlatform() === 'android' || Capacitor.getPlatform() === 'ios';
+  const { isLandscape } = useOrientation();
   const containerClass = isNativeApp ? 'container native-app' : 'container';
 
   const getAccuracy = () => totalAnswers ? Math.round((correctAnswers / totalAnswers) * 100) : 0;
@@ -61,6 +64,23 @@ const GameOverScreen = ({
     };
     return positions[position] || '';
   };
+
+  // Determine layout class based on orientation and platform
+  const getLayoutClass = () => {
+    if (!isNativeApp) {
+      // Web version - keep unchanged
+      return isMobile ? 'mobile-layout' : '';
+    }
+    
+    // Native app - responsive to orientation
+    if (isLandscape) {
+      return 'native-landscape-layout';
+    } else {
+      return 'mobile-layout'; // Keep portrait layout unchanged
+    }
+  };
+
+
 
   console.log('🎮 GameOverScreen rendered with props:', {
     correctAnswers,
@@ -140,7 +160,7 @@ const GameOverScreen = ({
       )}
       
       <div className="game-over">
-        <div className="game-stats">
+        <div className={`game-stats ${getLayoutClass()}`}>
           <div className="stat">
             <span className="stat-value">{correctAnswers}</span>
             <span className="stat-label">Correct</span>
