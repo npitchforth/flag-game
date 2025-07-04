@@ -45,6 +45,9 @@ const PrivacyPolicy = ({ isOpen, onClose }) => {
           <h5>b) Usage Data</h5>
           <p>We may also collect information about how the Service is accessed and used ("Usage Data"). This Usage Data may include information such as game scores, difficulty levels selected, time spent playing the game, and anonymous analytics data to help us improve the app experience.</p>
 
+          <h5>c) Advertising ID</h5>
+          <p>Our app may access your device's advertising identifier (AAID/IDFA) for analytics purposes through Firebase Analytics. This helps us understand app usage patterns and improve the user experience. The advertising ID is used anonymously and is not linked to your personal information.</p>
+
           <h3>2. Use of Data</h3>
           <p>Atlas Discovery Workshop Pty Ltd uses the collected data for various purposes:</p>
           <ul>
@@ -95,7 +98,7 @@ const PrivacyPolicy = ({ isOpen, onClose }) => {
             <li><strong>Supabase:</strong> We use Supabase to store and manage high scores and player data. Supabase's privacy policy can be found at <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer">https://supabase.com/privacy</a>.</li>
             <li><strong>FlagCDN:</strong> We use FlagCDN (flagcdn.com) to display flag images in our game. This service receives country codes to provide the appropriate flag images.</li>
             <li><strong>Vercel:</strong> Our web application is hosted on Vercel. Vercel's privacy policy can be found at <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">https://vercel.com/legal/privacy-policy</a>.</li>
-            <li><strong>Firebase:</strong> We use Google Firebase for analytics and crash reporting. Firebase collects anonymous usage data and crash reports to help us improve the app. Firebase's privacy policy can be found at <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener noreferrer">https://firebase.google.com/support/privacy</a>.</li>
+            <li><strong>Firebase:</strong> We use Google Firebase for analytics and crash reporting. Firebase collects anonymous usage data, crash reports, and may access your device's advertising identifier to help us improve the app. Firebase's privacy policy can be found at <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener noreferrer">https://firebase.google.com/support/privacy</a>.</li>
           </ul>
 
           <p>These third-party services have their own privacy policies, and we encourage you to review them. We do not control these third-party services and are not responsible for their privacy practices.</p>
