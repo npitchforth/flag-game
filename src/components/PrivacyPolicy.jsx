@@ -60,6 +60,9 @@ const PrivacyPolicy = ({ isOpen, onClose }) => {
             <li>To detect, prevent and address technical issues</li>
             <li>To display leaderboard statistics</li>
           </ul>
+          
+          <h4>Content Filtering</h4>
+          <p>To maintain a family-friendly environment, our app includes content filtering for player names on the leaderboard using the professional "bad-words" library. While all player names are stored in our database, names containing inappropriate content are displayed as "Anonymous Player" on the leaderboard. This filtering helps ensure a positive experience for all users while preserving the integrity of the leaderboard data.</p>
 
           <h3>3. Transfer Of Data</h3>
           <p>Your information, including Personal Data, may be transferred to — and maintained on — computers located outside of your state, province, country or other governmental jurisdiction where the data protection laws may differ than those from your jurisdiction.</p>

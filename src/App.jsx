@@ -13,6 +13,7 @@ import { difficultySettings } from './config/difficultySettings';
 import { generateUUID } from './utils/helpers';
 import { logQuestionAttempt } from './services/questionLogger';
 import { logError, logEvent } from './config/firebase';
+import { filterPlayerNameForDisplay } from './utils/contentFilter';
 import './styles/shared.css';
 import './styles/web.css';
 import './styles/capacitor.css';
@@ -59,6 +60,8 @@ const App = () => {
   const [isPersonalBest, setIsPersonalBest] = useState(false);
   const [personalBestPosition, setPersonalBestPosition] = useState(null);
   const [personalBestDifficulty, setPersonalBestDifficulty] = useState('');
+  
+
 
   const timerRef = useRef(null);
   const progressBarRef = useRef(null);
@@ -526,8 +529,9 @@ const App = () => {
       return;
     }
     
-    // If name is not blank, proceed with submission
-    await submitHighScore(playerName);
+    // Accept any name and submit it to Supabase
+    // The filtering will happen when displaying on the leaderboard
+    await submitHighScore(playerName.trim());
   };
 
   const submitHighScore = async (nameToSubmit) => {

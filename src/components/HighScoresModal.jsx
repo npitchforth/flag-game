@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { getDeviceId } from '../services/deviceId';
+import { filterPlayerNameForDisplay } from '../utils/contentFilter';
 
 const HighScoresModal = ({ isOpen, onClose, highScores, loading }) => {
   const [activeTab, setActiveTab] = useState('my'); // 'all' or 'my' - default to 'my'
@@ -167,7 +168,7 @@ const HighScoresModal = ({ isOpen, onClose, highScores, loading }) => {
                         {group.scores.map((score, index) => (
                           <li key={index} className="high-score-entry">
                             <span className="entry-position">{index + 1}.</span>
-                            {activeTab === 'all' && <span className="entry-name">{score.playerName || 'Anonymous'}</span>}
+                            {activeTab === 'all' && <span className="entry-name">{filterPlayerNameForDisplay(score.playerName)}</span>}
                             <span className="entry-points">
                               {score.score}{score.sovereignOnly ? <sup>*</sup> : null}
                             </span>
