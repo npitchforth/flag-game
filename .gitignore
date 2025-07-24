@@ -46,6 +46,14 @@ android/build/
 android/local.properties
 android/.idea/
 
+# Keystore files (security - never commit these!)
+*.keystore
+*.jks
+*.p12
+android/app/*.keystore
+android/app/*.jks
+android/app/*.p12
+
 # Prevent duplicate folders (common patterns)
 * 2/
 * 2.*
