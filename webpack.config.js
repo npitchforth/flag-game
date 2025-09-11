@@ -65,6 +65,11 @@ module.exports = (env, argv) => {
         'process.env.FIREBASE_MESSAGING_SENDER_ID': JSON.stringify(process.env.FIREBASE_MESSAGING_SENDER_ID || ''),
         'process.env.FIREBASE_APP_ID': JSON.stringify(process.env.FIREBASE_APP_ID || ''),
         'process.env.FIREBASE_MEASUREMENT_ID': JSON.stringify(process.env.FIREBASE_MEASUREMENT_ID || ''),
+        // Disable console logs in production
+        'console.log': isProduction ? 'function(){}' : 'console.log',
+        'console.error': isProduction ? 'function(){}' : 'console.error',
+        'console.warn': isProduction ? 'function(){}' : 'console.warn',
+        'console.info': isProduction ? 'function(){}' : 'console.info',
       })
     ],
     resolve: {

@@ -90,6 +90,7 @@ const GameOverScreen = ({
     highScoreDifficulty,
     leaderboardPosition,
     leaderboardDifficulty,
+    showForm,
     correctGuessesCount: correctGuesses?.length,
     incorrectGuessesCount: incorrectGuesses?.length
   });

@@ -115,6 +115,30 @@ const App = () => {
     }
   };
 
+  // New function that returns the fresh scores for immediate use
+  const loadHighScoresAndReturn = async () => {
+    console.log('Loading fresh high scores from Supabase...');
+    try {
+      const scores = await getHighScores();
+      console.log('📊 Fresh high scores loaded:', scores);
+      // Also update the state for consistency
+      setHighScores(scores);
+      return scores;
+    } catch (error) {
+      console.error('Failed to load fresh high scores:', error);
+      // Fallback to local storage if Supabase fails
+      try {
+        const localScores = JSON.parse(localStorage.getItem('flagGameHighScores')) || [];
+        console.log('📊 Fallback to local scores:', localScores);
+        setHighScores(localScores);
+        return localScores;
+      } catch {
+        setHighScores([]);
+        return [];
+      }
+    }
+  };
+
   const sortScores = (scores) => {
     return scores.sort((a, b) => {
       if (b.score !== a.score) return b.score - a.score;
@@ -336,11 +360,11 @@ const App = () => {
 
     // Reload high scores from Supabase to get the latest data before checking
     console.log('🎮 Reloading high scores from Supabase before checking...');
-    await loadHighScores();
+    const freshHighScores = await loadHighScoresAndReturn();
     
     // Check if this is a new high score against the latest data
-    console.log('🎮 Current high scores before check:', highScores);
-    const isNewHigh = isTopScoreForDifficulty(newScore, highScores, difficulty);
+    console.log('🎮 Fresh high scores for check:', freshHighScores);
+    const isNewHigh = isTopScoreForDifficulty(newScore, freshHighScores, difficulty);
     console.log('🎮 Setting isNewHighScore to:', isNewHigh);
     setIsNewHighScore(isNewHigh);
 
@@ -348,16 +372,18 @@ const App = () => {
     if (isNewHigh) {
       setHighScoreDifficulty(difficulty);
       setShowForm(true);
+      console.log('🏆 NEW HIGH SCORE! Form should be shown for difficulty:', difficulty);
     }
 
     // Check for leaderboard position (2nd, 3rd, 4th) only if not a new high score
     if (!isNewHigh) {
-      const position = checkLeaderboardPosition(newScore, highScores, difficulty);
+      const position = checkLeaderboardPosition(newScore, freshHighScores, difficulty);
       console.log('🏅 Leaderboard position:', position);
       setLeaderboardPosition(position);
       if (position) {
         setLeaderboardDifficulty(difficulty);
         setShowForm(true);
+        console.log('🏅 LEADERBOARD POSITION! Form should be shown for position:', position, 'difficulty:', difficulty);
       }
     }
     
@@ -382,7 +408,7 @@ const App = () => {
     }
     
     // Save to local storage as backup
-    const updatedLocalScores = sortScores([...highScores, newScore]).slice(0, 10);
+    const updatedLocalScores = sortScores([...freshHighScores, newScore]).slice(0, 10);
     localStorage.setItem('flagGameHighScores', JSON.stringify(updatedLocalScores));
     console.log('🎮 Saved to local storage:', updatedLocalScores);
   
