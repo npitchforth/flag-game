@@ -1128,10 +1128,37 @@ margin-left: 0.5rem;
   justify-content: flex-end;
 }
 
+/* Web Availability Text - Only shown in native app, positioned at bottom left */
+.web-availability-text {
+  position: fixed;
+  bottom: 50px;
+  left: 20px;
+  background: #ffffff;
+  color: #000;
+  border: 1px solid #d1d5db;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: normal;
+  white-space: nowrap;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Web Availability Button - Clickable styling */
+.web-availability-button {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.web-availability-button:hover {
+  background: #f3f4f6;
+}
+
 /* Privacy Policy Button - Small and Subtle */
 .privacy-policy-button {
   position: fixed;
-  bottom: 20px;
+  bottom: 50px;
   right: 20px;
   background: #f3f4f6;
   color: #000;
@@ -1152,19 +1179,48 @@ margin-left: 0.5rem;
   background: #e5e7eb;
 }
 
-/* Native app adjustments for privacy policy button */
+/* Native app adjustments for positioning */
+.native-app .web-availability-text {
+  bottom: 60px;
+  left: 30px;
+}
+
 .native-app .privacy-policy-button {
-  bottom: 30px;
+  bottom: 60px;
   right: 30px;
 }
 
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {
+  .web-availability-text {
+    bottom: 45px;
+    left: 15px;
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+  
   .privacy-policy-button {
-    bottom: 15px;
+    bottom: 45px;
     right: 15px;
     padding: 6px 10px;
     font-size: 11px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+  .web-availability-text {
+    bottom: 40px;
+    left: 10px;
+    font-size: 10px;
+    padding: 5px 8px;
+  }
+  
+  .privacy-policy-button {
+    bottom: 40px;
+    right: 10px;
+    padding: 5px 8px;
+    font-size: 10px;
   }
 }
 

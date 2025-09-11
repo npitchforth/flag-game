@@ -121,18 +121,21 @@ const App = () => {
     try {
       const scores = await getHighScores();
       console.log('📊 Fresh high scores loaded:', scores);
+      console.log('📊 Fresh high scores count:', scores.length);
       // Also update the state for consistency
       setHighScores(scores);
       return scores;
     } catch (error) {
-      console.error('Failed to load fresh high scores:', error);
+      console.error('❌ Failed to load fresh high scores from Supabase:', error);
       // Fallback to local storage if Supabase fails
       try {
         const localScores = JSON.parse(localStorage.getItem('flagGameHighScores')) || [];
         console.log('📊 Fallback to local scores:', localScores);
+        console.log('📊 Local scores count:', localScores.length);
         setHighScores(localScores);
         return localScores;
-      } catch {
+      } catch (localError) {
+        console.error('❌ Failed to load local scores:', localError);
         setHighScores([]);
         return [];
       }
@@ -151,14 +154,23 @@ const App = () => {
   const isTopScoreForDifficulty = (newScore, existingScores, difficulty) => {
     console.log('🏆 Checking if top score for difficulty:', difficulty);
     console.log('🏆 New score:', newScore);
+    console.log('🏆 Total existing scores:', existingScores.length);
     
     // Filter existing scores by difficulty
     const difficultyScores = existingScores.filter(score => score.difficulty === difficulty);
     console.log('🏆 Existing scores for', difficulty, ':', difficultyScores);
     
-    if (difficultyScores.length === 0) {
+    // Only consider it a high score if we have successfully loaded scores from the database
+    // AND there are no scores for this difficulty (meaning it's genuinely the first)
+    if (difficultyScores.length === 0 && existingScores.length > 0) {
       console.log('🏆 No existing scores for this difficulty - this is the top score!');
       return true;
+    }
+    
+    // If we have no scores at all, it might be a data loading issue - don't assume it's a high score
+    if (existingScores.length === 0) {
+      console.log('🏆 No scores loaded from database - skipping high score check to avoid false positives');
+      return false;
     }
     
     // Get the current top score for this difficulty
@@ -364,8 +376,17 @@ const App = () => {
     
     // Check if this is a new high score against the latest data
     console.log('🎮 Fresh high scores for check:', freshHighScores);
-    const isNewHigh = isTopScoreForDifficulty(newScore, freshHighScores, difficulty);
-    console.log('🎮 Setting isNewHighScore to:', isNewHigh);
+    console.log('🎮 Fresh high scores count:', freshHighScores.length);
+    
+    // Only check for high score if we successfully loaded data
+    let isNewHigh = false;
+    if (freshHighScores.length > 0) {
+      isNewHigh = isTopScoreForDifficulty(newScore, freshHighScores, difficulty);
+      console.log('🎮 Setting isNewHighScore to:', isNewHigh);
+    } else {
+      console.log('🎮 No high scores loaded - skipping high score check to prevent false positives');
+    }
+    
     setIsNewHighScore(isNewHigh);
 
     // Set the difficulty for which the high score was achieved
@@ -647,6 +668,7 @@ const App = () => {
     setShowPrivacyPolicy(true);
   };
 
+
   const renderMainContent = () => {
     if (!gameStarted) {
       return (
@@ -759,6 +781,13 @@ const App = () => {
   return (
     <>
       {renderMainContent()}
+      {isNativeApp && (
+        <span 
+          className="web-availability-text"
+        >
+          Also available on the web at www.guessygames.com!
+        </span>
+      )}
       <button 
         className="privacy-policy-button"
         onClick={() => setShowPrivacyPolicy(true)}

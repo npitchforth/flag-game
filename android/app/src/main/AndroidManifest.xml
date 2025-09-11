@@ -34,6 +34,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
+        
+        <!-- Disable baseline profiles to prevent INSTALL_BASELINE_PROFILE_FAILED error -->
+        <meta-data
+            android:name="androidx.profileinstaller.enableBaselineProfiles"
+            android:value="false" />
     </application>
 
     <!-- Permissions -->

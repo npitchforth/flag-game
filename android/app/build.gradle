@@ -22,9 +22,12 @@ android {
         applicationId "com.flaggame.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 7
-        versionName "1.1.0"
+        versionCode 8
+        versionName "1.2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        
+        // Disable baseline profiles to prevent INSTALL_BASELINE_PROFILE_FAILED error
+        // manifestPlaceholders = [enableBaselineProfiles: "false"]
         
         // WebView optimizations
         ndk {
@@ -40,18 +43,36 @@ android {
     signingConfigs {
         release {
             storeFile file('flag-game-upload-key.keystore')
-            storePassword System.getenv('KEYSTORE_PASSWORD') ?: 'flaggame123'
+             storePassword System.getenv('KEYSTORE_PASSWORD') ?: 'flaggame123'
             keyAlias 'flag-game-upload-key'
             keyPassword System.getenv('KEYSTORE_PASSWORD') ?: 'flaggame123'
         }
     }
     
     buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            debuggable true
+        }
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+        }
+    }
+    
+    // Disable baseline profiles to fix INSTALL_BASELINE_PROFILE_FAILED error
+    packagingOptions {
+        resources {
+            excludes += [
+                "META-INF/com.android.tools/r8-from",
+                "META-INF/com.android.tools/proguard-from",
+                "META-INF/com.android.tools/r8-to",
+                "META-INF/com.android.tools/proguard-to",
+                "META-INF/com.android.tools/baseline-profiles"
+            ]
         }
     }
 }
